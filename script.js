@@ -10,21 +10,18 @@ fetch('config_order.json')
     config.fields.forEach(field => {
       if (field.type !== 'order') {
         const label = document.createElement('label');
-        label.style.display = 'block';
-        label.style.marginBottom = '12px';
         label.innerText = field.label;
 
         const input = document.createElement('input');
         input.type = field.type;
         input.name = field.code;
         if (field.required) input.required = true;
-        label.appendChild(input);
 
+        label.appendChild(input);
         playerInfoContainer.appendChild(label);
         return;
       }
 
-      // Order groups
       if (field.groups) {
         field.groups.forEach(group => {
           const groupHeader = document.createElement('div');
@@ -51,60 +48,43 @@ fetch('config_order.json')
                 container.classList.add('order-option');
                 container.style.display = 'flex';
                 container.style.alignItems = 'center';
-                container.style.marginBottom = '6px';
-
-                const nameLabel = document.createElement('span');
-                nameLabel.innerText = option.name;
-                nameLabel.style.flex = '1';
-                container.appendChild(nameLabel);
-
-                if (option.note) {
-                  const noteSpan = document.createElement('span');
-                  noteSpan.innerText = option.note;
-                  noteSpan.style.marginLeft = '10px';
-                  noteSpan.style.fontWeight = 'bold';
-                  container.appendChild(noteSpan);
-                }
+                container.style.marginBottom = '8px';
 
                 if (option.quantity_inline) {
+                  const nameLabel = document.createElement('span');
+                  nameLabel.innerHTML = `<b>${option.name} ($${option.price})</b>`;
+                  nameLabel.style.width = '300px';
+                  container.appendChild(nameLabel);
+
                   const input = document.createElement('input');
                   input.type = 'number';
                   input.min = 0;
                   input.value = 0;
-                  input.name = option.name.replace(/\s+/g, '_');
+                  input.name = `${sub.name}_${option.name}`;
                   input.dataset.price = option.price;
                   input.classList.add('order-quantity');
-                  input.style.marginLeft = '10px';
+                  input.style.width = '60px';
+                  input.style.marginRight = '10px';
                   container.appendChild(input);
+
+                } else if (option.select_team_individual) {
+                  const label = document.createElement('span');
+                  label.innerText = option.name;
+                  label.style.width = '150px';
+                  container.appendChild(label);
+
+                  const select = document.createElement('select');
+                  select.name = `${sub.name}_${option.name}`;
+                  ['Individual', 'Team'].forEach(opt => {
+                    const optionEl = document.createElement('option');
+                    optionEl.value = opt;
+                    optionEl.innerText = opt;
+                    select.appendChild(optionEl);
+                  });
+                  container.appendChild(select);
                 }
 
                 orderFormContainer.appendChild(container);
-
-                // Dropdown for individual/team
-                if (option.select_team_individual) {
-                  const subOptions = document.createElement('div');
-                  subOptions.style.marginLeft = '20px';
-                  subOptions.style.display = 'flex';
-                  subOptions.style.gap = '10px';
-
-                  ['Individual', 'Team'].forEach(val => {
-                    const selectLabel = document.createElement('label');
-                    selectLabel.style.display = 'flex';
-                    selectLabel.style.alignItems = 'center';
-                    selectLabel.innerText = val + ': ';
-
-                    const select = document.createElement('select');
-                    select.name = `${option.name.replace(/\s+/g, '_')}_${val}`;
-                    const opt = document.createElement('option');
-                    opt.value = val.toLowerCase();
-                    opt.innerText = val;
-                    select.appendChild(opt);
-                    selectLabel.appendChild(select);
-                    subOptions.appendChild(selectLabel);
-                  });
-
-                  orderFormContainer.appendChild(subOptions);
-                }
               });
             });
           }
@@ -128,7 +108,6 @@ fetch('config_order.json')
     document.querySelectorAll('.order-quantity').forEach(input => {
       input.addEventListener('input', updateTotal);
     });
-
     updateTotal();
 
     // --- GENERATE QR CODE ---
@@ -140,25 +119,20 @@ fetch('config_order.json')
 
       config.fields.forEach(f => {
         if (f.type === 'order') {
-          if (f.groups) {
-            f.groups.forEach(group => {
-              if (group.subSections) {
-                group.subSections.forEach(sub => {
-                  sub.options.forEach(option => {
-                    if (option.select_team_individual) {
-                      ['Individual', 'Team'].forEach(val => {
-                        values.push(formData.get(`${option.name.replace(/\s+/g, '_')}_${val}`));
-                      });
-                    } else {
-                      const qty = parseInt(formData.get(option.name.replace(/\s+/g, '_'))) || 0;
-                      values.push(qty);
-                      total += qty * parseFloat(option.price);
-                    }
-                  });
-                });
-              }
+          f.groups.forEach(group => {
+            group.subSections.forEach(sub => {
+              sub.options.forEach(option => {
+                if (option.quantity_inline) {
+                  const inputName = `${sub.name}_${option.name}`;
+                  const qty = parseInt(formData.get(inputName)) || 0;
+                  values.push(qty);
+                  total += qty * parseFloat(option.price);
+                } else if (option.select_team_individual) {
+                  values.push(formData.get(`${sub.name}_${option.name}`));
+                }
+              });
             });
-          }
+          });
         } else {
           values.push(formData.get(f.code));
         }
