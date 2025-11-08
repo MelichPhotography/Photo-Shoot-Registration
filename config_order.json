@@ -2,13 +2,24 @@
   "title": "Melich Photography - Photo Shoot Order Form",
   "fields": [
     {
-      "label": "Name",
+      "label": "Player Name (Spell as you want it on Memory Mate)",
+      "type": "text",
+      "code": "name",
+      "required": true
+    },{
+      "label": "Parent Name)",
       "type": "text",
       "code": "name",
       "required": true
     },
     {
-      "label": "Email",
+      "label": "Phone Number",
+      "type": "number",
+      "code": "name",
+      "required": true
+    },
+    {
+      "label": "E-mail (Purchased digitals will be sent to this e-mail)",
       "type": "email",
       "code": "email",
       "required": true
@@ -19,7 +30,7 @@
       "code": "jersey"
     },
     {
-      "label": "Team",
+      "label": "Team/Squad",
       "type": "text",
       "code": "team"
     },
