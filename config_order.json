@@ -60,6 +60,31 @@
               ]
             }
           ]
+        },
+        {
+          "name": "Digital & Print Packages",
+          "subSections": [
+            {
+              "name": "Package Options",
+              "note": "Select the desired digital and print options. For prints, choose individual or team as needed.",
+              "options": [
+                {
+                  "name": "(1) Low res digital + (1) 8x10 memory mate print",
+                  "price": 50
+                },
+                {
+                  "name": "(1) Low res digital + (1) 4x5 print + (1) 5x7 print",
+                  "price": 75,
+                  "variants": [
+                    { "name": "4x5 print: Individual", "value": "4x5_individual" },
+                    { "name": "4x5 print: Team", "value": "4x5_team" },
+                    { "name": "5x7 print: Individual", "value": "5x7_individual" },
+                    { "name": "5x7 print: Team", "value": "5x7_team" }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }
