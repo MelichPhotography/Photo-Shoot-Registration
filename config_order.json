@@ -65,21 +65,36 @@
           "name": "Digital & Print Packages",
           "subSections": [
             {
-              "name": "Package Options",
-              "note": "Select the desired digital and print options. For prints, choose individual or team as needed.",
+              "name": "Package 1",
+              "note": "(1) Low res digital image + (1) 8x10 Memory Mate print",
               "options": [
                 {
-                  "name": "(1) Low res digital + (1) 8x10 memory mate print",
-                  "price": 50
+                  "name": "Package 1",
+                  "price": 50,
+                  "displayPrice": "$50 (a $60 value)"
+                }
+              ]
+            },
+            {
+              "name": "Package 2",
+              "note": "(1) Low res digital image + (1) 4x5 print + (1) 5x7 print",
+              "options": [
+                {
+                  "name": "Package 2 - 4x5 Print",
+                  "price": 50,
+                  "displayPrice": "$50 (a $63 value)",
+                  "variants": [
+                    { "name": "Individual", "code": "package2_4x5_individual" },
+                    { "name": "Team", "code": "package2_4x5_team" }
+                  ]
                 },
                 {
-                  "name": "(1) Low res digital + (1) 4x5 print + (1) 5x7 print",
-                  "price": 75,
+                  "name": "Package 2 - 5x7 Print",
+                  "price": 50,
+                  "displayPrice": "$50 (a $63 value)",
                   "variants": [
-                    { "name": "4x5 print: Individual", "value": "4x5_individual" },
-                    { "name": "4x5 print: Team", "value": "4x5_team" },
-                    { "name": "5x7 print: Individual", "value": "5x7_individual" },
-                    { "name": "5x7 print: Team", "value": "5x7_team" }
+                    { "name": "Individual", "code": "package2_5x7_individual" },
+                    { "name": "Team", "code": "package2_5x7_team" }
                   ]
                 }
               ]
