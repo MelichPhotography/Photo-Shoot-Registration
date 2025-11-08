@@ -31,7 +31,7 @@
           "subSections": [
             {
               "name": "High Resolution Digital Images",
-              "note": "High resolution prints up to 20x24 inches. All come with complementary team digital of same resolution.",
+              "note": "Printable up to 20x24 inches, good for social media. All come with complementary high resolution team digital.",
               "options": [
                 {"name": "1 high res image", "price": 50},
                 {"name": "2 high res images", "price": 90},
@@ -40,7 +40,7 @@
             },
             {
               "name": "Low Resolution Digital Images",
-              "note": "Low resolution prints up to 8x12 inches, good for social media. All come with complementary team digital of same resolution.",
+              "note": "Printable up to 8x12 inches, good for social media. All come with complementary low resolution team digital.",
               "options": [
                 {"name": "1 low res image", "price": 35},
                 {"name": "2 low res images", "price": 60},
