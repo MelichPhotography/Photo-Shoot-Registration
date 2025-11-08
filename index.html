@@ -6,146 +6,24 @@
   <title>Melich Photography - Photo Shoot Order Form</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
-      background: #fdfdfd;
-      color: #333;
-    }
-
-    .logo-container {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    .logo-container img {
-      max-width: 200px;
-      height: auto;
-      border-radius: 0;
-      box-shadow: none;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .player-info, #orderForm {
-      padding: 15px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-      background-color: #fff;
-      margin-bottom: 20px;
-    }
-
-    form label {
-      display: block;
-      margin-bottom: 12px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="number"],
-    select {
-      padding: 6px 8px;
-      margin-top: 4px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    /* Order items flex row */
-    .order-option {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-
-    .order-name {
-      flex: 1;
-      font-weight: bold;
-    }
-
-    .order-price {
-      margin-left: 10px;
-      font-weight: bold;
-    }
-
-    .order-quantity {
-      width: 60px;
-      margin-left: 10px;
-      margin-right: 20px;
-    }
-
-    .sub-options {
-      margin-left: 20px;
-      margin-bottom: 10px;
-    }
-
-    .group-header {
-      font-weight: bold;
-      font-size: 1.2em;
-      margin-top: 16px;
-      margin-bottom: 8px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 2px;
-    }
-
-    .sub-section-header {
-      font-weight: 700;
-      font-size: 1.2em;
-      text-decoration: underline;
-      margin-top: 20px;
-      margin-bottom: 6px;
-    }
-
-    .sub-section-note {
-      font-size: 0.9em;
-      color: #555;
-      margin-left: 10px;
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-
-    #total {
-      font-weight: bold;
-      font-size: 1.2em;
-      margin-top: 15px;
-      color: #0077cc;
-    }
-
-    #qr {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: #0077cc;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background-color: #005fa3;
-    }
-
-    @media (max-width: 500px) {
-      .order-quantity {
-        width: 50px;
-      }
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 500px; margin: auto; background: #fdfdfd; color: #333; }
+    .logo-container { text-align: center; margin-bottom: 15px; }
+    .logo-container img { max-width: 200px; height: auto; border-radius: 0; box-shadow: none; }
+    h1 { text-align: center; margin-bottom: 20px; }
+    .player-info, #orderForm { padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 3px 8px rgba(0,0,0,0.15); background-color: #fff; margin-bottom: 20px; }
+    form label { display: block; margin-bottom: 12px; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="number"] { padding: 6px 8px; margin-top: 4px; width: 100%; box-sizing: border-box; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+    .group-header { font-weight: bold; font-size: 1.2em; margin-top: 16px; margin-bottom: 8px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
+    .sub-section-header { font-weight: 700; font-size: 1.2em; text-decoration: underline; margin-top: 20px; margin-bottom: 6px; }
+    .sub-section-note { font-size: 0.9em; color: #555; margin-left: 10px; margin-bottom: 12px; font-style: italic; }
+    .order-option { margin-bottom: 8px; }
+    .order-option span { display: inline-block; width: 200px; font-weight: bold; }
+    input.order-quantity { width: 60px; padding: 4px; font-size: 16px; margin-right: 20px; }
+    #total { font-weight: bold; font-size: 1.2em; margin-top: 15px; color: #0077cc; }
+    #qr { margin-top: 20px; text-align: center; }
+    button { margin-top: 15px; padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #0077cc; color: #fff; border: none; border-radius: 6px; transition: background 0.2s; }
+    button:hover { background-color: #005fa3; }
+    @media (max-width: 500px) { .order-option span { width: 140px; } input.order-quantity { width: 50px; } }
   </style>
 </head>
 <body>
