@@ -1,5 +1,5 @@
 {
-  "title": "Photo Shoot Check-In & Order Form",
+  "title": "Melich Photography - Photo Shoot Order Form",
   "fields": [
     {
       "label": "Name",
@@ -15,55 +15,47 @@
     },
     {
       "label": "Jersey Number",
-      "type": "number",
-      "code": "jerseyNumber",
-      "required": true
+      "type": "text",
+      "code": "jersey"
     },
     {
       "label": "Team",
       "type": "text",
-      "code": "team",
-      "required": true
+      "code": "team"
     },
     {
-      "label": "Digital Images",
       "type": "order",
-      "code": "digitalImages",
       "groups": [
         {
-          "name": "High Resolution (up to 20x24, good for prints)",
-          "note": "All high-res digital purchases include a complementary team digital of the same resolution",
+          "name": "Digital Images",
+          "note": "All digitals come with complementary team digital of same resolution.",
           "options": [
-            { "name": "1", "price": 50 },
-            { "name": "2", "price": 90 },
-            { "name": "3", "price": 120 }
-          ]
-        },
-        {
-          "name": "Low Resolution (up to 8x12, good for social media)",
-          "note": "All low-res digital purchases include a complementary team digital of the same resolution",
-          "options": [
-            { "name": "1", "price": 35 },
-            { "name": "2", "price": 60 },
-            { "name": "3", "price": 75 }
+            {
+              "name": "1 High Resolution Digital Image",
+              "price": 50
+            },
+            {
+              "name": "2 High Resolution Digital Images",
+              "price": 90
+            },
+            {
+              "name": "3 High Resolution Digital Images",
+              "price": 120
+            },
+            {
+              "name": "1 Low Resolution Digital Image (good for prints and social media)",
+              "price": 35
+            },
+            {
+              "name": "2 Low Resolution Digital Images (good for prints and social media)",
+              "price": 60
+            },
+            {
+              "name": "3 Low Resolution Digital Images (good for prints and social media)",
+              "price": 75
+            }
           ]
         }
-      ]
-    },
-    {
-      "label": "Digital + Print Packages",
-      "type": "order",
-      "code": "digitalPrintPackages",
-      "options": [
-        { "name": "Placeholder Item 1", "price": 0 }
-      ]
-    },
-    {
-      "label": "Prints + Print Packages",
-      "type": "order",
-      "code": "printPackages",
-      "options": [
-        { "name": "Placeholder Item 1", "price": 0 }
       ]
     }
   ]
