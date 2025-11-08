@@ -75,7 +75,9 @@
               "name": "Package 2",
               "note": "(1) Low res digital image\n(1) 4x5 print\n(1) 5x7 print",
               "options": [
-                { "name": "($63 Value)", "price": 50, "quantity_inline": true }
+                { "name": "($63 Value)", "price": 50, "quantity_inline": true },
+                { "name": "4x5 print", "price": 0, "quantity_inline": false, "choices": ["Individual", "Team"] },
+                { "name": "5x7 print", "price": 0, "quantity_inline": false, "choices": ["Individual", "Team"] }
               ]
             }
           ]
