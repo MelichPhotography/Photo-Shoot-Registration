@@ -1,20 +1,81 @@
 {
   "title": "Photo Shoot Check-In & Order Form",
   "fields": [
-    { "label": "Name", "type": "text", "code": "name", "required": true },
-    { "label": "Email", "type": "email", "code": "email", "required": true },
-    { "label": "Jersey Number", "type": "number", "code": "jerseyNumber", "required": true },
-    { "label": "Team", "type": "text", "code": "team", "required": true },
     {
-      "label": "Packages",
+      "label": "Name",
+      "type": "text",
+      "code": "name",
+      "required": true
+    },
+    {
+      "label": "Email",
+      "type": "email",
+      "code": "email",
+      "required": true
+    },
+    {
+      "label": "Jersey Number",
+      "type": "number",
+      "code": "jerseyNumber",
+      "required": true
+    },
+    {
+      "label": "Team",
+      "type": "text",
+      "code": "team",
+      "required": true
+    },
+    {
+      "label": "Digital Images",
       "type": "order",
-      "code": "packages",
+      "code": "digitalImages",
       "options": [
-        { "name": "Package A", "price": 20 },
-        { "name": "Package B", "price": 35 },
-        { "name": "Package C", "price": 50 },
-        { "name": "Package D", "price": 15 },
-        { "name": "Package E", "price": 25 }
+        {
+          "name": "High Resolution Digital Image - 1",
+          "price": 50
+        },
+        {
+          "name": "High Resolution Digital Images - 2",
+          "price": 90
+        },
+        {
+          "name": "High Resolution Digital Images - 3",
+          "price": 120
+        },
+        {
+          "name": "Low Resolution Digital Image - 1",
+          "price": 35
+        },
+        {
+          "name": "Low Resolution Digital Images - 2",
+          "price": 60
+        },
+        {
+          "name": "Low Resolution Digital Images - 3",
+          "price": 75
+        }
+      ]
+    },
+    {
+      "label": "Digital + Print Packages",
+      "type": "order",
+      "code": "digitalPrintPackages",
+      "options": [
+        {
+          "name": "Placeholder Item 1",
+          "price": 0
+        }
+      ]
+    },
+    {
+      "label": "Prints + Print Packages",
+      "type": "order",
+      "code": "printPackages",
+      "options": [
+        {
+          "name": "Placeholder Item 1",
+          "price": 0
+        }
       ]
     }
   ]
