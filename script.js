@@ -51,24 +51,35 @@ fetch('config_order.json')
                 container.classList.add('order-option');
 
                 const nameLabel = document.createElement('span');
-                nameLabel.innerText = `${option.name}${option.price ? ' ($' + option.price + ')' : ''}`;
+                nameLabel.innerText = `${option.name} ($${option.price})`;
                 container.appendChild(nameLabel);
 
-                if(option.type === 'radio') {
-                  const radio = document.createElement('input');
-                  radio.type = 'radio';
-                  radio.name = option.group;
-                  radio.classList.add('radio-option');
-                  container.appendChild(radio);
-                } else {
-                  const input = document.createElement('input');
-                  input.type = 'number';
-                  input.min = 0;
-                  input.value = 0;
-                  input.name = `${field.code}_${group.name}_${sub.name}_${option.name}`;
-                  input.dataset.price = option.price || 0;
-                  input.classList.add('order-quantity');
-                  container.appendChild(input);
+                // Quantity input
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = 0;
+                input.value = 0;
+                input.name = `${field.code}_${group.name}_${sub.name}_${option.name}`;
+                input.dataset.price = option.price;
+                input.classList.add('order-quantity');
+                container.appendChild(input);
+
+                // Optional individual/team selectors if present
+                if (option.choices) {
+                  option.choices.forEach(choice => {
+                    const choiceDiv = document.createElement('div');
+                    choiceDiv.style.marginLeft = '25px';
+                    const choiceLabel = document.createElement('label');
+                    choiceLabel.style.display = 'block';
+                    choiceLabel.innerText = choice.label;
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `${field.code}_${group.name}_${sub.name}_${option.name}_choice`;
+                    radio.value = choice.value;
+                    choiceLabel.prepend(radio);
+                    choiceDiv.appendChild(choiceLabel);
+                    container.appendChild(choiceDiv);
+                  });
                 }
 
                 orderFormContainer.appendChild(container);
@@ -96,11 +107,6 @@ fetch('config_order.json')
       input.addEventListener('input', updateTotal);
     });
 
-    // Radio buttons do not affect price
-    document.querySelectorAll('.radio-option').forEach(input => {
-      input.addEventListener('change', updateTotal);
-    });
-
     updateTotal();
 
     // --- GENERATE QR CODE ---
@@ -117,17 +123,10 @@ fetch('config_order.json')
               if (group.subSections) {
                 group.subSections.forEach(sub => {
                   sub.options.forEach(option => {
-                    if(option.type === 'radio') {
-                      const radios = document.getElementsByName(option.group);
-                      let selected = '';
-                      radios.forEach(r => { if(r.checked) selected = option.name; });
-                      values.push(selected);
-                    } else {
-                      const inputName = `${f.code}_${group.name}_${sub.name}_${option.name}`;
-                      const qty = parseInt(formData.get(inputName)) || 0;
-                      values.push(qty);
-                      total += qty * parseFloat(option.price || 0);
-                    }
+                    const inputName = `${f.code}_${group.name}_${sub.name}_${option.name}`;
+                    const qty = parseInt(formData.get(inputName)) || 0;
+                    values.push(qty);
+                    total += qty * parseFloat(option.price);
                   });
                 });
               }
@@ -143,7 +142,6 @@ fetch('config_order.json')
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
     });
-
   })
   .catch(err => {
     console.error('Error loading config:', err);
