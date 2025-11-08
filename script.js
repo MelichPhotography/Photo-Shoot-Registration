@@ -51,10 +51,15 @@ fetch('config_order.json')
                 container.classList.add('order-option');
 
                 const nameLabel = document.createElement('span');
-                nameLabel.innerText = `${option.name} ($${option.price})`;
+                nameLabel.classList.add('option-name');
+                nameLabel.innerText = option.name;
                 container.appendChild(nameLabel);
 
-                // Quantity input
+                const priceLabel = document.createElement('span');
+                priceLabel.classList.add('option-price');
+                priceLabel.innerText = option.price > 0 ? `$${option.price}` : '';
+                container.appendChild(priceLabel);
+
                 const input = document.createElement('input');
                 input.type = 'number';
                 input.min = 0;
@@ -63,24 +68,6 @@ fetch('config_order.json')
                 input.dataset.price = option.price;
                 input.classList.add('order-quantity');
                 container.appendChild(input);
-
-                // Optional individual/team selectors if present
-                if (option.choices) {
-                  option.choices.forEach(choice => {
-                    const choiceDiv = document.createElement('div');
-                    choiceDiv.style.marginLeft = '25px';
-                    const choiceLabel = document.createElement('label');
-                    choiceLabel.style.display = 'block';
-                    choiceLabel.innerText = choice.label;
-                    const radio = document.createElement('input');
-                    radio.type = 'radio';
-                    radio.name = `${field.code}_${group.name}_${sub.name}_${option.name}_choice`;
-                    radio.value = choice.value;
-                    choiceLabel.prepend(radio);
-                    choiceDiv.appendChild(choiceLabel);
-                    container.appendChild(choiceDiv);
-                  });
-                }
 
                 orderFormContainer.appendChild(container);
               });
