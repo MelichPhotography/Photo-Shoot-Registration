@@ -5,7 +5,7 @@ fetch('config_order.json')
     document.getElementById('title').innerText = config.title;
     const form = document.getElementById('qrForm');
 
-    // Dynamically create form fields
+    // --- GENERATE FORM FIELDS ---
     config.fields.forEach(field => {
       const label = document.createElement('label');
       label.innerText = field.label;
@@ -26,7 +26,7 @@ fetch('config_order.json')
           input.name = option.name;
           input.dataset.price = option.price;
           input.style.width = '60px';
-          input.classList.add('order-quantity'); // only order inputs counted in total
+          input.classList.add('order-quantity'); // only these counted in total
           container.appendChild(input);
 
           label.appendChild(container);
@@ -42,14 +42,14 @@ fetch('config_order.json')
       form.insertBefore(label, form.querySelector('button'));
     });
 
-    // Add total display
+    // --- TOTAL DISPLAY ---
     const totalDisplay = document.createElement('div');
     totalDisplay.id = 'total';
     totalDisplay.style.fontWeight = 'bold';
     totalDisplay.style.marginTop = '15px';
     form.insertBefore(totalDisplay, form.querySelector('button'));
 
-    // Update total function
+    // --- UPDATE TOTAL ---
     function updateTotal() {
       let total = 0;
       form.querySelectorAll('.order-quantity').forEach(input => {
@@ -68,24 +68,27 @@ fetch('config_order.json')
     // Initialize total
     updateTotal();
 
-    // Generate QR on submit
+    // --- GENERATE QR CODE ---
     form.addEventListener('submit', e => {
       e.preventDefault();
       const formData = new FormData(form);
       const values = [];
+      let total = 0;
 
       config.fields.forEach(f => {
         if (f.type === 'order') {
-          const orderItems = [];
+          // For QR: push only numbers
           f.options.forEach(option => {
-            const qty = formData.get(option.name) || 0;
-            orderItems.push(`${option.name}:${qty}`);
+            const qty = parseInt(formData.get(option.name)) || 0;
+            values.push(qty); // just the number
+            total += qty * parseFloat(option.price);
           });
-          values.push(orderItems.join(';'));
         } else {
           values.push(formData.get(f.code));
         }
       });
+
+      values.push(total.toFixed(2)); // total as last tab cell
 
       const qrText = values.join('\t') + '\n';
       document.getElementById('qr').innerHTML = '';
