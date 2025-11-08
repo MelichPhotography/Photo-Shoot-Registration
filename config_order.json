@@ -45,18 +45,18 @@
               "name": "High Resolution Digital Images",
               "note": "Printable up to 20x24 inches, great for social media. Includes complementary matching high-resolution team image.",
               "options": [
-                { "name": "1 High Resolution Digital Image", "price": 50 },
-                { "name": "2 High Resolution Digital Images", "price": 90 },
-                { "name": "3 High Resolution Digital Images", "price": 120 }
+                { "name": "1 High Res Image", "price": 50 },
+                { "name": "2 High Res Image", "price": 90 },
+                { "name": "3 High Res Image", "price": 120 }
               ]
             },
             {
               "name": "Low Resolution Digital Images",
               "note": "Printable up to 8x12 inches, great for social media. Includes complementary matching low-resolution team image.",
               "options": [
-                { "name": "1 Low Resolution Digital Image", "price": 35 },
-                { "name": "2 Low Resolution Digital Images", "price": 60 },
-                { "name": "3 Low Resolution Digital Images", "price": 75 }
+                { "name": "1 Low Res Image", "price": 35 },
+                { "name": "2 Low Res Images", "price": 60 },
+                { "name": "3 Low Res Images", "price": 75 }
               ]
             }
           ]
@@ -65,10 +65,11 @@
           "name": "Digital & Print Packages",
           "subSections": [
             {
-              "name": "Package 1",
+              "name": "Package 1", "price": 50, "quantity_inline": true,
               "note": "(a $60 value)",
               "options": [
-                { "name": "(1) Low res digital image + (1) 8x10 Memory Mate print", "price": 50, "quantity_inline": true }
+                { "name": "(1) Low res digital image"},
+                { "name": "(1) 8x10 Memory Mate print"}
               ]
             },
             {
