@@ -43,7 +43,7 @@
           "subSections": [
             {
               "name": "High Resolution Digital Images",
-              "note": "Printable up to 20x24 inches, great for sharing on social media. Includes complementary matching high-resolution team image.",
+              "note": "Printable up to 20x24 inches, great for social media. Includes complementary matching high-resolution team image.",
               "options": [
                 { "name": "1 High Resolution Digital Image", "price": 50 },
                 { "name": "2 High Resolution Digital Images", "price": 90 },
@@ -52,7 +52,7 @@
             },
             {
               "name": "Low Resolution Digital Images",
-              "note": "Printable up to 8x12 inches, great for sharing on social media. Includes complementary matching low-resolution team image.",
+              "note": "Printable up to 8x12 inches, great for social media. Includes complementary matching low-resolution team image.",
               "options": [
                 { "name": "1 Low Resolution Digital Image", "price": 35 },
                 { "name": "2 Low Resolution Digital Images", "price": 60 },
@@ -66,20 +66,20 @@
           "subSections": [
             {
               "name": "Package 1",
-              "note": "(1) Low res digital image + (1) 8x10 Memory Mate print",
+              "note": "(a $60 value)",
               "options": [
-                { "name": "(1) Low res digital image + (1) 8x10 Memory Mate print", "price": 50 }
+                { "name": "(1) Low res digital image + (1) 8x10 Memory Mate print", "price": 50, "quantity_inline": true }
               ]
             },
             {
               "name": "Package 2",
-              "note": "(1) Low res digital image + (1) 4x5 print + (1) 5x7 print",
+              "note": "(a $63 value)",
               "options": [
-                { "name": "(1) Low res digital image", "price": 50 },
-                { "name": "(1) 4x5 print - Individual", "price": 0, "type": "radio", "group": "4x5" },
-                { "name": "(1) 4x5 print - Team", "price": 0, "type": "radio", "group": "4x5" },
-                { "name": "(1) 5x7 print - Individual", "price": 0, "type": "radio", "group": "5x7" },
-                { "name": "(1) 5x7 print - Team", "price": 0, "type": "radio", "group": "5x7" }
+                { "name": "(1) Low res digital image + (1) 4x5 print + (1) 5x7 print", "price": 50, "quantity_inline": true },
+                { "name": "   - Individual 4x5 print", "price": 0, "quantity_inline": true },
+                { "name": "   - Team 4x5 print", "price": 0, "quantity_inline": true },
+                { "name": "   - Individual 5x7 print", "price": 0, "quantity_inline": true },
+                { "name": "   - Team 5x7 print", "price": 0, "quantity_inline": true }
               ]
             }
           ]
