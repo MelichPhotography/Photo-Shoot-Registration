@@ -68,7 +68,7 @@
               "name": "Package 1",
               "note": "($60 Value)",
               "options": [
-                { "name": "(1) Low res digital image\n(1) 8x10 Memory Mate print", "price": 50, "quantity_inline": true}
+                { "name": "(1) Low res digital image", "price": 50, "quantity_inline": true, "\n(1) 8x10 Memory Mate print"}
               ] 
             },
             {
