@@ -1,127 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Photo Shoot Check-In</title>
-<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="expires" content="0">
-<meta http-equiv="pragma" content="no-cache">
-<style>
-body {
-  font-family: 'Arial', sans-serif;
-  background: #f5f5f5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0;
-  padding: 20px;
-}
 
-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
+fetch('config.json')
+  .then(res => res.json())
+  .then(config => {
+    document.getElementById('title').innerText = config.title;
+    const form = document.getElementById('qrForm');
 
-header img {
-  max-width: 180px;
-  margin-bottom: 10px;
-}
+    // Dynamically create form fields
+    config.fields.forEach(field => {
+      const label = document.createElement('label');
+      label.innerText = field.label;
 
-h1 {
-  margin: 0;
-  font-size: 2em;
-  color: #333;
-}
+      if (field.type === 'order') {
+        field.options.forEach(option => {
+          const container = document.createElement('div');
+          container.style.marginBottom = '8px';
 
-form {
-  width: 90%;
-  max-width: 400px;
-  padding: 20px 30px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-}
+          const nameLabel = document.createElement('span');
+          nameLabel.innerText = `${option.name} ($${option.price}) `;
+          container.appendChild(nameLabel);
 
-label {
-  margin-top: 10px;
-  font-weight: bold;
-  color: #555;
-}
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.min = 0;
+          input.value = 0;
+          input.name = option.name;
+          input.dataset.price = option.price;
+          input.style.width = '60px';
+          container.appendChild(input);
 
-input[type="text"],
-input[type="email"],
-input[type="number"] {
-  padding: 12px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1.1em;
-  width: 100%;
-  box-sizing: border-box;
-}
+          label.appendChild(container);
+        });
+      } else {
+        const input = document.createElement('input');
+        input.type = field.type;
+        input.name = field.code;
+        if (field.required) input.required = true;
+        label.appendChild(input);
+      }
 
-.order-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 5px;
-}
+      form.insertBefore(label, form.querySelector('button'));
+    });
 
-.order-container input {
-  width: 60px;
-}
+    // Add total display
+    const totalDisplay = document.createElement('div');
+    totalDisplay.id = 'total';
+    totalDisplay.style.fontWeight = 'bold';
+    totalDisplay.style.marginTop = '15px';
+    form.insertBefore(totalDisplay, form.querySelector('button'));
 
-button {
-  margin-top: 20px;
-  padding: 14px 20px;
-  background: #0077b6;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s;
-  font-size: 1.1em;
-}
+    // Update total on quantity change
+    form.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('input', () => {
+        let total = 0;
+        form.querySelectorAll('input[type="number"]').forEach(i => {
+          total += i.valueAsNumber * parseFloat(i.dataset.price);
+        });
+        totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
+      });
+    });
 
-button:hover {
-  background: #005f86;
-}
+    // Generate QR on submit
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const values = [];
 
-#qr {
-  margin-top: 20px;
-}
+      config.fields.forEach(f => {
+        if (f.type === 'order') {
+          const orderItems = [];
+          f.options.forEach(option => {
+            const qty = formData.get(option.name) || 0;
+            orderItems.push(`${option.name}:${qty}`);
+          });
+          values.push(orderItems.join(';'));
+        } else {
+          values.push(formData.get(f.code));
+        }
+      });
 
-#total-price {
-  font-weight: bold;
-  margin-top: 15px;
-}
-
-@media (max-width: 400px) {
-  h1 {
-    font-size: 1.5em;
-  }
-  button {
-    padding: 12px 16px;
-    font-size: 1em;
-  }
-}
-</style>
-</head>
-<body>
-<header>
-  <img src="melich_logo.png" alt="Melich Photography Logo">
-  <h1 id="title">Loading Form...</h1>
-</header>
-
-<form id="qrForm">
-  <button type="submit">Generate QR</button>
-</form>
-
-<div id="total-price">Total: $0.00</div>
-<div id="qr"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script
+      const qrText = values.join('\t') + '\n';
+      document.getElementById('qr').innerHTML = '';
+      new QRCode(document.getElementById('qr'), qrText);
+    });
+  });
