@@ -1,8 +1,9 @@
 {
-  "title": "Photo Shoot Order Form",
+  "title": "Photo Shoot Check-In & Order Form",
   "fields": [
     { "label": "Name", "type": "text", "code": "name", "required": true },
     { "label": "Email", "type": "email", "code": "email", "required": true },
+    { "label": "Jersey Number", "type": "number", "code": "jerseyNumber", "required": true },
     { "label": "Team", "type": "text", "code": "team", "required": true },
     {
       "label": "Packages",
