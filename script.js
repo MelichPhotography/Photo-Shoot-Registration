@@ -7,17 +7,15 @@ fetch('config_order.json')
     const orderFormContainer = document.getElementById('orderForm');
 
     // --- GENERATE FORM FIELDS ---
-    config.fields.forEach(field => {
-      if (field.type !== 'order') {
+    config.fields.forEach(f => {
+      if (f.type !== 'order') {
         const label = document.createElement('label');
-        label.style.display = 'block';
-        label.style.marginBottom = '12px';
-        label.innerText = field.label;
+        label.innerText = f.label;
 
         const input = document.createElement('input');
-        input.type = field.type;
-        input.name = field.code;
-        if (field.required) input.required = true;
+        input.type = f.type;
+        input.name = f.code;
+        if(f.required) input.required = true;
         label.appendChild(input);
 
         playerInfoContainer.appendChild(label);
@@ -25,8 +23,8 @@ fetch('config_order.json')
       }
 
       // Order groups
-      if (field.groups) {
-        field.groups.forEach(group => {
+      if (f.groups) {
+        f.groups.forEach(group => {
           const groupHeader = document.createElement('div');
           groupHeader.classList.add('group-header');
           groupHeader.innerText = group.name;
@@ -39,7 +37,7 @@ fetch('config_order.json')
               subHeader.innerText = sub.name;
               orderFormContainer.appendChild(subHeader);
 
-              if (sub.note) {
+              if(sub.note) {
                 const noteEl = document.createElement('div');
                 noteEl.classList.add('sub-section-note');
                 noteEl.innerText = sub.note;
@@ -50,35 +48,29 @@ fetch('config_order.json')
                 const container = document.createElement('div');
                 container.classList.add('order-option');
 
+                // Name
                 const nameLabel = document.createElement('span');
-                nameLabel.innerText = option.name + (option.price ? ` ($${option.price})` : '');
+                nameLabel.classList.add('name');
+                nameLabel.innerText = option.name;
                 container.appendChild(nameLabel);
 
-                // Quantity input if inline
-                if (option.quantity_inline) {
+                // Quantity inline
+                if(option.quantity_inline) {
                   const input = document.createElement('input');
                   input.type = 'number';
                   input.min = 0;
                   input.value = 0;
-                  input.name = `${field.code}_${group.name}_${sub.name}_${option.name}`;
-                  input.dataset.price = option.price || 0;
+                  input.name = `${f.code}_${group.name}_${sub.name}_${option.name}`;
+                  input.dataset.price = option.price;
                   input.classList.add('order-quantity');
                   container.appendChild(input);
                 }
 
-                // Choices (like Individual/Team)
-                if (option.choices) {
-                  const select = document.createElement('select');
-                  select.name = `${field.code}_${group.name}_${sub.name}_${option.name}`;
-                  option.choices.forEach(choice => {
-                    const opt = document.createElement('option');
-                    opt.value = choice;
-                    opt.innerText = choice;
-                    select.appendChild(opt);
-                  });
-                  select.style.marginLeft = '20px';
-                  container.appendChild(select);
-                }
+                // Price
+                const priceSpan = document.createElement('span');
+                priceSpan.classList.add('price');
+                priceSpan.innerText = `$${option.price}`;
+                container.appendChild(priceSpan);
 
                 orderFormContainer.appendChild(container);
               });
@@ -90,21 +82,17 @@ fetch('config_order.json')
 
     // --- TOTAL DISPLAY ---
     const totalDisplay = document.getElementById('total');
-
     function updateTotal() {
       let total = 0;
-      document.querySelectorAll('.order-quantity').forEach(input => {
-        const qty = Math.max(0, parseInt(input.value) || 0);
-        const price = parseFloat(input.dataset.price) || 0;
+      document.querySelectorAll('.order-quantity').forEach(i => {
+        const qty = Math.max(0, parseInt(i.value) || 0);
+        const price = parseFloat(i.dataset.price) || 0;
         total += qty * price;
       });
       totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
     }
 
-    document.querySelectorAll('.order-quantity').forEach(input => {
-      input.addEventListener('input', updateTotal);
-    });
-
+    document.querySelectorAll('.order-quantity').forEach(i => i.addEventListener('input', updateTotal));
     updateTotal();
 
     // --- GENERATE QR CODE ---
@@ -115,21 +103,16 @@ fetch('config_order.json')
       let total = 0;
 
       config.fields.forEach(f => {
-        if (f.type === 'order') {
-          if (f.groups) {
+        if(f.type === 'order') {
+          if(f.groups) {
             f.groups.forEach(group => {
-              if (group.subSections) {
+              if(group.subSections) {
                 group.subSections.forEach(sub => {
                   sub.options.forEach(option => {
                     const inputName = `${f.code}_${group.name}_${sub.name}_${option.name}`;
-                    if (option.quantity_inline) {
-                      const qty = parseInt(formData.get(inputName)) || 0;
-                      values.push(qty);
-                      total += qty * parseFloat(option.price);
-                    } else if (option.choices) {
-                      const choiceVal = formData.get(inputName) || '';
-                      values.push(choiceVal);
-                    }
+                    const qty = parseInt(formData.get(inputName)) || 0;
+                    values.push(qty);
+                    total += qty * parseFloat(option.price);
                   });
                 });
               }
