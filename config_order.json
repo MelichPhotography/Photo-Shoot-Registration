@@ -3,6 +3,7 @@
   "fields": [
     { "label": "Name", "type": "text", "code": "name", "required": true },
     { "label": "Email", "type": "email", "code": "email", "required": true },
+    { "label": "Jersey Number", "type": "number", "code": "number", "required": true },
     { "label": "Team", "type": "text", "code": "team", "required": true },
     {
       "label": "Packages",
