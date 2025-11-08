@@ -2,7 +2,9 @@ fetch('config_order.json')
   .then(res => res.json())
   .then(config => {
     document.getElementById('title').innerText = config.title;
-    const form = document.getElementById('qrForm');
+
+    const playerInfoContainer = document.getElementById('playerInfo');
+    const orderFormContainer = document.getElementById('orderForm');
 
     // --- GENERATE FORM FIELDS ---
     config.fields.forEach(field => {
@@ -18,37 +20,32 @@ fetch('config_order.json')
         if (field.required) input.required = true;
         label.appendChild(input);
 
-        form.insertBefore(label, form.querySelector('button'));
+        playerInfoContainer.appendChild(label);
         return;
       }
 
       // Order groups
       if (field.groups) {
         field.groups.forEach(group => {
-          // Main group header
           const groupHeader = document.createElement('div');
           groupHeader.classList.add('group-header');
           groupHeader.innerText = group.name;
-          form.insertBefore(groupHeader, form.querySelector('button'));
+          orderFormContainer.appendChild(groupHeader);
 
-          // Loop subSections
           if (group.subSections) {
             group.subSections.forEach(sub => {
-              // Sub-section header
               const subHeader = document.createElement('div');
               subHeader.classList.add('sub-section-header');
               subHeader.innerText = sub.name;
-              form.insertBefore(subHeader, form.querySelector('button'));
+              orderFormContainer.appendChild(subHeader);
 
-              // Sub-section note
               if (sub.note) {
                 const noteEl = document.createElement('div');
                 noteEl.classList.add('sub-section-note');
                 noteEl.innerText = sub.note;
-                form.insertBefore(noteEl, form.querySelector('button'));
+                orderFormContainer.appendChild(noteEl);
               }
 
-              // Options
               sub.options.forEach(option => {
                 const container = document.createElement('div');
                 container.classList.add('order-option');
@@ -66,7 +63,7 @@ fetch('config_order.json')
                 input.classList.add('order-quantity');
                 container.appendChild(input);
 
-                form.insertBefore(container, form.querySelector('button'));
+                orderFormContainer.appendChild(container);
               });
             });
           }
@@ -75,14 +72,11 @@ fetch('config_order.json')
     });
 
     // --- TOTAL DISPLAY ---
-    const totalDisplay = document.createElement('div');
-    totalDisplay.id = 'total';
-    form.insertBefore(totalDisplay, form.querySelector('button'));
+    const totalDisplay = document.getElementById('total');
 
-    // --- UPDATE TOTAL ---
     function updateTotal() {
       let total = 0;
-      form.querySelectorAll('.order-quantity').forEach(input => {
+      document.querySelectorAll('.order-quantity').forEach(input => {
         const qty = Math.max(0, parseInt(input.value) || 0);
         const price = parseFloat(input.dataset.price) || 0;
         total += qty * price;
@@ -90,16 +84,16 @@ fetch('config_order.json')
       totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
     }
 
-    form.querySelectorAll('.order-quantity').forEach(input => {
+    document.querySelectorAll('.order-quantity').forEach(input => {
       input.addEventListener('input', updateTotal);
     });
 
     updateTotal();
 
     // --- GENERATE QR CODE ---
-    form.addEventListener('submit', e => {
+    document.getElementById('qrForm').addEventListener('submit', e => {
       e.preventDefault();
-      const formData = new FormData(form);
+      const formData = new FormData(document.getElementById('qrForm'));
       const values = [];
       let total = 0;
 
@@ -112,7 +106,7 @@ fetch('config_order.json')
                   sub.options.forEach(option => {
                     const inputName = `${f.code}_${group.name}_${sub.name}_${option.name}`;
                     const qty = parseInt(formData.get(inputName)) || 0;
-                    values.push(qty); // only numbers
+                    values.push(qty);
                     total += qty * parseFloat(option.price);
                   });
                 });
