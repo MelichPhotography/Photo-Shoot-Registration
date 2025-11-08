@@ -51,23 +51,34 @@ fetch('config_order.json')
                 container.classList.add('order-option');
 
                 const nameLabel = document.createElement('span');
-                nameLabel.classList.add('option-name');
-                nameLabel.innerText = option.name;
+                nameLabel.innerText = option.name + (option.price ? ` ($${option.price})` : '');
                 container.appendChild(nameLabel);
 
-                const priceLabel = document.createElement('span');
-                priceLabel.classList.add('option-price');
-                priceLabel.innerText = option.price > 0 ? `$${option.price}` : '';
-                container.appendChild(priceLabel);
+                // Quantity input if inline
+                if (option.quantity_inline) {
+                  const input = document.createElement('input');
+                  input.type = 'number';
+                  input.min = 0;
+                  input.value = 0;
+                  input.name = `${field.code}_${group.name}_${sub.name}_${option.name}`;
+                  input.dataset.price = option.price || 0;
+                  input.classList.add('order-quantity');
+                  container.appendChild(input);
+                }
 
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.min = 0;
-                input.value = 0;
-                input.name = `${field.code}_${group.name}_${sub.name}_${option.name}`;
-                input.dataset.price = option.price;
-                input.classList.add('order-quantity');
-                container.appendChild(input);
+                // Choices (like Individual/Team)
+                if (option.choices) {
+                  const select = document.createElement('select');
+                  select.name = `${field.code}_${group.name}_${sub.name}_${option.name}`;
+                  option.choices.forEach(choice => {
+                    const opt = document.createElement('option');
+                    opt.value = choice;
+                    opt.innerText = choice;
+                    select.appendChild(opt);
+                  });
+                  select.style.marginLeft = '20px';
+                  container.appendChild(select);
+                }
 
                 orderFormContainer.appendChild(container);
               });
@@ -111,9 +122,14 @@ fetch('config_order.json')
                 group.subSections.forEach(sub => {
                   sub.options.forEach(option => {
                     const inputName = `${f.code}_${group.name}_${sub.name}_${option.name}`;
-                    const qty = parseInt(formData.get(inputName)) || 0;
-                    values.push(qty);
-                    total += qty * parseFloat(option.price);
+                    if (option.quantity_inline) {
+                      const qty = parseInt(formData.get(inputName)) || 0;
+                      values.push(qty);
+                      total += qty * parseFloat(option.price);
+                    } else if (option.choices) {
+                      const choiceVal = formData.get(inputName) || '';
+                      values.push(choiceVal);
+                    }
                   });
                 });
               }
