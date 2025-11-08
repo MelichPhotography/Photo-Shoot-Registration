@@ -28,31 +28,33 @@
       font-size: 2em;
       color: #333;
     }
-    form {
-      background: white;
-      padding: 20px 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      width: 300px;
-    }
+  form {
+    width: 90%;          /* 90% of screen width */
+    max-width: 400px;    /* don’t get too wide on large screens */
+    padding: 20px 30px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+
     label {
       margin-top: 10px;
       font-weight: bold;
       color: #555;
     }
     input {
-      padding: 8px;
+      padding: 12px;
       margin-top: 5px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      font-size: 1em;
+      font-size: 1.1em;
       width: 100%;
       box-sizing: border-box;
     }
     button {
-      margin-top: 20px;
+      margin-top: 14px 20px;
       padding: 10px 15px;
       background: #0077b6;
       color: white;
@@ -61,6 +63,7 @@
       border-radius: 10px;
       cursor: pointer;
       transition: background 0.3s;
+      font-size 1.1em;
     }
     button:hover {
       background: #005f86;
