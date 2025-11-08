@@ -9,13 +9,12 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      max-width: 480px;
+      max-width: 500px;
       margin: auto;
       background: #fdfdfd;
       color: #333;
     }
 
-    /* Logo */
     .logo-container {
       text-align: center;
       margin-bottom: 15px;
@@ -24,8 +23,8 @@
     .logo-container img {
       max-width: 200px;
       height: auto;
-      border-radius: 0; /* no rounded corners */
-      box-shadow: none; /* no shadow */
+      border-radius: 0;
+      box-shadow: none;
     }
 
     h1 {
@@ -33,12 +32,24 @@
       margin-bottom: 20px;
     }
 
-    form {
+    /* Player info box */
+    .player-info {
       padding: 15px;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
       background-color: #fff;
+      margin-bottom: 20px;
+    }
+
+    /* Order form box */
+    #orderForm {
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      background-color: #fff;
+      margin-bottom: 20px;
     }
 
     form label {
@@ -62,28 +73,37 @@
     /* Group headers */
     .group-header {
       font-weight: bold;
-      font-size: 1.1em;
+      font-size: 1.2em;
       margin-top: 16px;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
       border-bottom: 1px solid #ccc;
       padding-bottom: 2px;
     }
 
-    /* Notes under group headers */
-    .group-note {
+    .sub-section-header {
+      font-weight: 700;
+      font-size: 1.2em;
+      text-decoration: underline;
+      margin-top: 20px;
+      margin-bottom: 6px;
+    }
+
+    .sub-section-note {
       font-size: 0.9em;
-      font-weight: normal;
       color: #555;
-      margin-bottom: 8px;
+      margin-left: 10px;
+      margin-bottom: 12px;
+      font-style: italic;
     }
 
     .order-option {
-      margin-bottom: 6px;
+      margin-left: 20px;
+      margin-bottom: 8px;
     }
 
     .order-option span {
       display: inline-block;
-      width: 180px;
+      width: 200px;
     }
 
     input.order-quantity {
@@ -139,6 +159,9 @@
   <h1 id="title">Loading Form...</h1>
 
   <form id="qrForm">
+    <div class="player-info" id="playerInfo"></div>
+    <div id="orderForm"></div>
+    <div id="total"></div>
     <button type="submit">Generate QR Code</button>
   </form>
 
