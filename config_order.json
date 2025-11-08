@@ -66,37 +66,21 @@
           "subSections": [
             {
               "name": "Package 1",
-              "note": "(1) Low res digital image + (1) 8x10 Memory Mate print",
+              "note": "Select quantity for this package. $50 (a $60 value)",
               "options": [
-                {
-                  "name": "Package 1",
-                  "price": 50,
-                  "displayPrice": "$50 (a $60 value)"
-                }
+                { "name": "(1) Low res digital image", "price": 50 },
+                { "name": "(1) 8x10 Memory Mate print", "price": 0 }
               ]
             },
             {
               "name": "Package 2",
-              "note": "(1) Low res digital image + (1) 4x5 print + (1) 5x7 print",
+              "note": "$50 (a $63 value). Select individual or team for each print.",
               "options": [
-                {
-                  "name": "Package 2 - 4x5 Print",
-                  "price": 50,
-                  "displayPrice": "$50 (a $63 value)",
-                  "variants": [
-                    { "name": "Individual", "code": "package2_4x5_individual" },
-                    { "name": "Team", "code": "package2_4x5_team" }
-                  ]
-                },
-                {
-                  "name": "Package 2 - 5x7 Print",
-                  "price": 50,
-                  "displayPrice": "$50 (a $63 value)",
-                  "variants": [
-                    { "name": "Individual", "code": "package2_5x7_individual" },
-                    { "name": "Team", "code": "package2_5x7_team" }
-                  ]
-                }
+                { "name": "(1) Low res digital image", "price": 50 },
+                { "name": "(1) 4x5 print - Individual", "price": 0, "selectionType": "radio", "group": "4x5" },
+                { "name": "(1) 4x5 print - Team", "price": 0, "selectionType": "radio", "group": "4x5" },
+                { "name": "(1) 5x7 print - Individual", "price": 0, "selectionType": "radio", "group": "5x7" },
+                { "name": "(1) 5x7 print - Team", "price": 0, "selectionType": "radio", "group": "5x7" }
               ]
             }
           ]
