@@ -21,7 +21,7 @@ fetch('config.json')
       const formData = new FormData(form);
       const values = [];
       config.fields.forEach(f => values.push(formData.get(f.code)));
-      const qrText = values.join(',');
+      const qrText = values.join('\t');
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
     });
