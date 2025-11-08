@@ -28,31 +28,24 @@
       "groups": [
         {
           "name": "Digital Images",
-          "note": "All digitals come with complementary team digital of same resolution.",
-          "options": [
+          "subSections": [
             {
-              "name": "1 High Resolution Digital Image",
-              "price": 50
+              "name": "High Resolution Digital Images",
+              "note": "High resolution prints up to 20x24 inches. All come with complementary team digital of same resolution.",
+              "options": [
+                {"name": "1 high res image", "price": 50},
+                {"name": "2 high res images", "price": 90},
+                {"name": "3 high res images", "price": 120}
+              ]
             },
             {
-              "name": "2 High Resolution Digital Images",
-              "price": 90
-            },
-            {
-              "name": "3 High Resolution Digital Images",
-              "price": 120
-            },
-            {
-              "name": "1 Low Resolution Digital Image (good for prints and social media)",
-              "price": 35
-            },
-            {
-              "name": "2 Low Resolution Digital Images (good for prints and social media)",
-              "price": 60
-            },
-            {
-              "name": "3 Low Resolution Digital Images (good for prints and social media)",
-              "price": 75
+              "name": "Low Resolution Digital Images",
+              "note": "Low resolution prints up to 8x12 inches, good for social media. All come with complementary team digital of same resolution.",
+              "options": [
+                {"name": "1 low res image", "price": 35},
+                {"name": "2 low res images", "price": 60},
+                {"name": "3 low res images", "price": 75}
+              ]
             }
           ]
         }
