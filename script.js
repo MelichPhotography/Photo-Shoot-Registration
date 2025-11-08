@@ -8,38 +8,84 @@ fetch('config_order.json')
     // --- GENERATE FORM FIELDS ---
     config.fields.forEach(field => {
       const label = document.createElement('label');
+      label.style.display = 'block';
+      label.style.marginBottom = '12px';
       label.innerText = field.label;
 
       if (field.type === 'order') {
-        field.options.forEach(option => {
-          const container = document.createElement('div');
-          container.style.marginBottom = '8px';
+        // Check for groups
+        if (field.groups) {
+          field.groups.forEach(group => {
+            // Group header
+            const groupHeader = document.createElement('div');
+            groupHeader.style.fontWeight = 'bold';
+            groupHeader.style.marginTop = '8px';
+            groupHeader.innerText = group.name;
+            form.insertBefore(groupHeader, form.querySelector('button'));
 
-          const nameLabel = document.createElement('span');
-          nameLabel.innerText = `${option.name} ($${option.price}) `;
-          container.appendChild(nameLabel);
+            // Group note
+            if (group.note) {
+              const noteEl = document.createElement('small');
+              noteEl.style.display = 'block';
+              noteEl.style.fontWeight = 'normal';
+              noteEl.style.marginBottom = '6px';
+              noteEl.innerText = group.note;
+              form.insertBefore(noteEl, form.querySelector('button'));
+            }
 
-          const input = document.createElement('input');
-          input.type = 'number';
-          input.min = 0;
-          input.value = 0; // blank treated as 0
-          input.name = option.name;
-          input.dataset.price = option.price;
-          input.style.width = '60px';
-          input.classList.add('order-quantity'); // only these counted in total
-          container.appendChild(input);
+            // Options
+            group.options.forEach(option => {
+              const container = document.createElement('div');
+              container.style.marginBottom = '6px';
 
-          label.appendChild(container);
-        });
+              const nameLabel = document.createElement('span');
+              nameLabel.innerText = `${option.name} ($${option.price}) `;
+              container.appendChild(nameLabel);
+
+              const input = document.createElement('input');
+              input.type = 'number';
+              input.min = 0;
+              input.value = 0;
+              input.name = `${field.code}_${group.name}_${option.name}`; // unique name
+              input.dataset.price = option.price;
+              input.style.width = '60px';
+              input.classList.add('order-quantity'); // counted in total
+              container.appendChild(input);
+
+              form.insertBefore(container, form.querySelector('button'));
+            });
+          });
+        } else {
+          // Fallback for flat options
+          field.options.forEach(option => {
+            const container = document.createElement('div');
+            container.style.marginBottom = '8px';
+
+            const nameLabel = document.createElement('span');
+            nameLabel.innerText = `${option.name} ($${option.price}) `;
+            container.appendChild(nameLabel);
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = 0;
+            input.value = 0;
+            input.name = option.name;
+            input.dataset.price = option.price;
+            input.style.width = '60px';
+            input.classList.add('order-quantity');
+            container.appendChild(input);
+
+            form.insertBefore(container, form.querySelector('button'));
+          });
+        }
       } else {
         const input = document.createElement('input');
         input.type = field.type;
         input.name = field.code;
         if (field.required) input.required = true;
         label.appendChild(input);
+        form.insertBefore(label, form.querySelector('button'));
       }
-
-      form.insertBefore(label, form.querySelector('button'));
     });
 
     // --- TOTAL DISPLAY ---
@@ -77,25 +123,27 @@ fetch('config_order.json')
 
       config.fields.forEach(f => {
         if (f.type === 'order') {
-          // For QR: push only numbers
-          f.options.forEach(option => {
-            const qty = parseInt(formData.get(option.name)) || 0;
-            values.push(qty); // just the number
-            total += qty * parseFloat(option.price);
-          });
+          // Handle grouped options
+          if (f.groups) {
+            f.groups.forEach(group => {
+              group.options.forEach(option => {
+                const inputName = `${f.code}_${group.name}_${option.name}`;
+                const qty = parseInt(formData.get(inputName)) || 0;
+                values.push(qty); // just the number
+                total += qty * parseFloat(option.price);
+              });
+            });
+          } else {
+            // Flat options fallback
+            f.options.forEach(option => {
+              const qty = parseInt(formData.get(option.name)) || 0;
+              values.push(qty);
+              total += qty * parseFloat(option.price);
+            });
+          }
         } else {
           values.push(formData.get(f.code));
         }
       });
 
-      values.push(total.toFixed(2)); // total as last tab cell
-
-      const qrText = values.join('\t') + '\n';
-      document.getElementById('qr').innerHTML = '';
-      new QRCode(document.getElementById('qr'), qrText);
-    });
-  })
-  .catch(err => {
-    console.error('Error loading config:', err);
-    document.getElementById('title').innerText = 'Error loading form';
-  });
+      values.push(total.toFixed(2)); // add total as last tab cell
