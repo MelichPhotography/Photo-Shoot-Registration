@@ -4,18 +4,18 @@
     {
       "label": "Player Name (Spell as you want it on Memory Mate)",
       "type": "text",
-      "code": "name",
+      "code": "player_name",
       "required": true
     },{
       "label": "Parent Name)",
       "type": "text",
-      "code": "name",
+      "code": "parent_name",
       "required": true
     },
     {
       "label": "Phone Number",
       "type": "number",
-      "code": "name",
+      "code": "phone",
       "required": true
     },
     {
