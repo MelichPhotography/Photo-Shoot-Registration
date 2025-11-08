@@ -1,4 +1,4 @@
-
+// Fetch the external config file
 fetch('config_order.json')
   .then(res => res.json())
   .then(config => {
@@ -22,10 +22,11 @@ fetch('config_order.json')
           const input = document.createElement('input');
           input.type = 'number';
           input.min = 0;
-          input.value = 0;
+          input.value = 0; // blank treated as 0
           input.name = option.name;
           input.dataset.price = option.price;
           input.style.width = '60px';
+          input.classList.add('order-quantity'); // only order inputs counted in total
           container.appendChild(input);
 
           label.appendChild(container);
@@ -48,16 +49,24 @@ fetch('config_order.json')
     totalDisplay.style.marginTop = '15px';
     form.insertBefore(totalDisplay, form.querySelector('button'));
 
-    // Update total on quantity change
-    form.querySelectorAll('input[type="number"]').forEach(input => {
-      input.addEventListener('input', () => {
-        let total = 0;
-        form.querySelectorAll('input[type="number"]').forEach(i => {
-          total += i.valueAsNumber * parseFloat(i.dataset.price);
-        });
-        totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
+    // Update total function
+    function updateTotal() {
+      let total = 0;
+      form.querySelectorAll('.order-quantity').forEach(input => {
+        const qty = Math.max(0, parseInt(input.value) || 0);
+        const price = parseFloat(input.dataset.price) || 0;
+        total += qty * price;
       });
+      totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
+    }
+
+    // Listen for changes on order inputs
+    form.querySelectorAll('.order-quantity').forEach(input => {
+      input.addEventListener('input', updateTotal);
     });
+
+    // Initialize total
+    updateTotal();
 
     // Generate QR on submit
     form.addEventListener('submit', e => {
@@ -82,4 +91,8 @@ fetch('config_order.json')
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
     });
+  })
+  .catch(err => {
+    console.error('Error loading config:', err);
+    document.getElementById('title').innerText = 'Error loading form';
   });
