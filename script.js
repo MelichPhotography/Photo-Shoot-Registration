@@ -6,7 +6,7 @@ fetch('config_order.json')
     const playerInfoContainer = document.getElementById('playerInfo');
     const orderFormContainer = document.getElementById('orderForm');
 
-    // --- GENERATE PLAYER INFO FIELDS ---
+    // --- GENERATE FORM FIELDS ---
     config.fields.forEach(field => {
       if (field.type !== 'order') {
         const label = document.createElement('label');
@@ -21,77 +21,62 @@ fetch('config_order.json')
         label.appendChild(input);
 
         playerInfoContainer.appendChild(label);
+        return;
       }
-    });
 
-    // --- GENERATE ORDER GROUPS ---
-    config.fields.forEach(field => {
-      if (field.type === 'order' && field.groups) {
+      // Order groups
+      if (field.groups) {
         field.groups.forEach(group => {
-          // Group header
           const groupHeader = document.createElement('div');
           groupHeader.classList.add('group-header');
           groupHeader.innerText = group.name;
           orderFormContainer.appendChild(groupHeader);
 
-          // Subsections
-          group.subSections.forEach(sub => {
-            const subHeader = document.createElement('div');
-            subHeader.classList.add('sub-section-header');
-            subHeader.innerText = sub.name;
-            orderFormContainer.appendChild(subHeader);
+          if (group.subSections) {
+            group.subSections.forEach(sub => {
+              const subHeader = document.createElement('div');
+              subHeader.classList.add('sub-section-header');
+              subHeader.innerText = sub.name;
+              orderFormContainer.appendChild(subHeader);
 
-            if (sub.note) {
-              const noteEl = document.createElement('div');
-              noteEl.classList.add('sub-section-note');
-              noteEl.innerText = sub.note;
-              orderFormContainer.appendChild(noteEl);
-            }
-
-            // Options
-            sub.options.forEach(option => {
-              const container = document.createElement('div');
-              container.classList.add('order-option');
-
-              // Main package name & price
-              const nameLabel = document.createElement('div');
-              nameLabel.innerHTML = `<strong>${option.name}</strong> - ${option.displayPrice || '$' + option.price}`;
-              container.appendChild(nameLabel);
-
-              // If variants exist (Individual/Team, multiple prints)
-              if (option.variants) {
-                option.variants.forEach(variant => {
-                  const variantDiv = document.createElement('div');
-                  variantDiv.style.marginLeft = '20px'; // indent
-                  const variantLabel = document.createElement('label');
-
-                  const input = document.createElement('input');
-                  input.type = 'checkbox'; // allow multiple selections
-                  input.name = variant.code;
-                  input.dataset.price = option.price;
-                  input.classList.add('order-quantity');
-
-                  variantLabel.appendChild(input);
-                  variantLabel.appendChild(document.createTextNode(' ' + variant.name));
-                  variantDiv.appendChild(variantLabel);
-                  container.appendChild(variantDiv);
-                });
-              } else {
-                // Standard numeric quantity input
-                const qtyInput = document.createElement('input');
-                qtyInput.type = 'number';
-                qtyInput.min = 0;
-                qtyInput.value = 0;
-                qtyInput.name = `${sub.name}_${option.name}`;
-                qtyInput.dataset.price = option.price;
-                qtyInput.classList.add('order-quantity');
-                qtyInput.style.marginTop = '4px';
-                container.appendChild(qtyInput);
+              if (sub.note) {
+                const noteEl = document.createElement('div');
+                noteEl.classList.add('sub-section-note');
+                noteEl.innerText = sub.note;
+                orderFormContainer.appendChild(noteEl);
               }
 
-              orderFormContainer.appendChild(container);
+              sub.options.forEach(option => {
+                const container = document.createElement('div');
+                container.classList.add('order-option');
+
+                const nameLabel = document.createElement('span');
+                nameLabel.innerText = option.name;
+                container.appendChild(nameLabel);
+
+                let input;
+                if (option.selectionType === 'radio') {
+                  input = document.createElement('input');
+                  input.type = 'radio';
+                  input.name = option.group;
+                  input.value = option.name;
+                  input.dataset.price = option.price;
+                } else {
+                  input = document.createElement('input');
+                  input.type = 'number';
+                  input.min = 0;
+                  input.value = 0;
+                  input.name = `${group.name}_${sub.name}_${option.name}`;
+                  input.dataset.price = option.price;
+                  input.classList.add('order-quantity');
+                  input.style.marginLeft = '10px';
+                }
+
+                container.appendChild(input);
+                orderFormContainer.appendChild(container);
+              });
             });
-          });
+          }
         });
       }
     });
@@ -102,19 +87,22 @@ fetch('config_order.json')
     function updateTotal() {
       let total = 0;
 
+      // Number inputs
       document.querySelectorAll('.order-quantity').forEach(input => {
-        if (input.type === 'checkbox') {
-          if (input.checked) total += parseFloat(input.dataset.price) || 0;
-        } else {
-          const qty = Math.max(0, parseInt(input.value) || 0);
-          total += qty * parseFloat(input.dataset.price || 0);
-        }
+        const qty = Math.max(0, parseInt(input.value) || 0);
+        const price = parseFloat(input.dataset.price) || 0;
+        total += qty * price;
+      });
+
+      // Radio inputs
+      document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+        total += parseFloat(input.dataset.price) || 0;
       });
 
       totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
     }
 
-    document.querySelectorAll('.order-quantity').forEach(input => {
+    document.querySelectorAll('.order-quantity, input[type="radio"]').forEach(input => {
       input.addEventListener('input', updateTotal);
       input.addEventListener('change', updateTotal);
     });
@@ -129,31 +117,33 @@ fetch('config_order.json')
       let total = 0;
 
       config.fields.forEach(f => {
-        if (f.type === 'order' && f.groups) {
-          f.groups.forEach(group => {
-            group.subSections.forEach(sub => {
-              sub.options.forEach(option => {
-                if (option.variants) {
-                  option.variants.forEach(variant => {
-                    const checked = formData.get(variant.code);
-                    values.push(checked ? '1' : '0');
-                    if (checked) total += parseFloat(option.price) || 0;
+        if (f.type === 'order') {
+          if (f.groups) {
+            f.groups.forEach(group => {
+              if (group.subSections) {
+                group.subSections.forEach(sub => {
+                  sub.options.forEach(option => {
+                    let qtyOrSelection = 0;
+                    if (option.selectionType === 'radio') {
+                      const selected = formData.get(option.group);
+                      qtyOrSelection = (selected === option.name) ? 1 : 0;
+                      total += qtyOrSelection * parseFloat(option.price);
+                    } else {
+                      qtyOrSelection = parseInt(formData.get(`${group.name}_${sub.name}_${option.name}`)) || 0;
+                      total += qtyOrSelection * parseFloat(option.price);
+                    }
+                    values.push(qtyOrSelection);
                   });
-                } else {
-                  const qty = parseInt(formData.get(`${sub.name}_${option.name}`)) || 0;
-                  values.push(qty);
-                  total += qty * parseFloat(option.price || 0);
-                }
-              });
+                });
+              }
             });
-          });
+          }
         } else {
-          values.push(formData.get(f.code) || '');
+          values.push(formData.get(f.code));
         }
       });
 
       values.push(total.toFixed(2));
-
       const qrText = values.join('\t') + '\n';
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
