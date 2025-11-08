@@ -45,18 +45,18 @@
               "name": "High Resolution Digital Images",
               "note": "Printable up to 20x24 inches, great for social media. Includes complementary matching high-resolution team image.",
               "options": [
-                { "name": "1 High Res Image", "price": 50 },
-                { "name": "2 High Res Image ($100 Value)   ", "price": 90 },
-                { "name": "3 High Res Image ($150 Value)   ", "price": 120 }
+                { "name": "1 High Res Image", "price": 50, "quantity_inline": true  },
+                { "name": "2 High Res Image ($100 Value)   ", "price": 90, "quantity_inline": true  },
+                { "name": "3 High Res Image ($150 Value)   ", "price": 120, "quantity_inline": true  }
               ]
             },
             {
               "name": "Low Resolution Digital Images",
               "note": "Printable up to 8x12 inches, great for social media. Includes complementary matching low-resolution team image.",
               "options": [
-                { "name": "1 Low Res Image", "price": 35 },
-                { "name": "2 Low Res Images ($70 Value)   ", "price": 60 },
-                { "name": "3 Low Res Images ($105 Value)   ", "price": 75 }
+                { "name": "1 Low Res Image", "price": 35, "quantity_inline": true  },
+                { "name": "2 Low Res Images ($70 Value)   ", "price": 60, "quantity_inline": true  },
+                { "name": "3 Low Res Images ($105 Value)   ", "price": 75, "quantity_inline": true  }
               ]
             }
           ]
