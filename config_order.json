@@ -1,0 +1,20 @@
+{
+  "title": "Photo Shoot Order Form",
+  "fields": [
+    { "label": "Name", "type": "text", "code": "name", "required": true },
+    { "label": "Email", "type": "email", "code": "email", "required": true },
+    { "label": "Team", "type": "text", "code": "team", "required": true },
+    {
+      "label": "Packages",
+      "type": "order",
+      "code": "packages",
+      "options": [
+        { "name": "Package A", "price": 20 },
+        { "name": "Package B", "price": 35 },
+        { "name": "Package C", "price": 50 },
+        { "name": "Package D", "price": 15 },
+        { "name": "Package E", "price": 25 }
+      ]
+    }
+  ]
+}
