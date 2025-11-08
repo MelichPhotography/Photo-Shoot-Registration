@@ -59,7 +59,8 @@
 
     input[type="text"],
     input[type="email"],
-    input[type="number"] {
+    input[type="number"],
+    input[type="tel"] {
       padding: 6px 8px;
       margin-top: 4px;
       width: 100%;
@@ -159,8 +160,12 @@
   <h1 id="title">Loading Form...</h1>
 
   <form id="qrForm">
+    <!-- Player Info Section -->
     <div class="player-info" id="playerInfo"></div>
+
+    <!-- Order Form Section -->
     <div id="orderForm"></div>
+
     <div id="total"></div>
     <button type="submit">Generate QR Code</button>
   </form>
