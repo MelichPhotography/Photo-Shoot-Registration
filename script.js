@@ -6,107 +6,120 @@ fetch('config_order.json')
     const playerInfoContainer = document.getElementById('playerInfo');
     const orderFormContainer = document.getElementById('orderForm');
 
-    // --- Player info fields ---
+    // --- GENERATE FORM FIELDS ---
     config.fields.forEach(field => {
       if (field.type !== 'order') {
         const label = document.createElement('label');
+        label.style.display = 'block';
+        label.style.marginBottom = '12px';
         label.innerText = field.label;
 
         const input = document.createElement('input');
         input.type = field.type;
         input.name = field.code;
         if (field.required) input.required = true;
-
         label.appendChild(input);
+
         playerInfoContainer.appendChild(label);
+        return;
+      }
+
+      // Order groups
+      if (field.groups) {
+        field.groups.forEach(group => {
+          const groupHeader = document.createElement('div');
+          groupHeader.classList.add('group-header');
+          groupHeader.innerText = group.name;
+          orderFormContainer.appendChild(groupHeader);
+
+          if (group.subSections) {
+            group.subSections.forEach(sub => {
+              const subHeader = document.createElement('div');
+              subHeader.classList.add('sub-section-header');
+              subHeader.innerText = sub.name;
+              orderFormContainer.appendChild(subHeader);
+
+              if (sub.note) {
+                const noteEl = document.createElement('div');
+                noteEl.classList.add('sub-section-note');
+                noteEl.innerText = sub.note;
+                orderFormContainer.appendChild(noteEl);
+              }
+
+              sub.options.forEach(option => {
+                const container = document.createElement('div');
+                container.classList.add('order-option');
+                container.style.display = 'flex';
+                container.style.alignItems = 'center';
+                container.style.marginBottom = '6px';
+
+                const nameLabel = document.createElement('span');
+                nameLabel.innerText = option.name;
+                nameLabel.style.flex = '1';
+                container.appendChild(nameLabel);
+
+                if (option.note) {
+                  const noteSpan = document.createElement('span');
+                  noteSpan.innerText = option.note;
+                  noteSpan.style.marginLeft = '10px';
+                  noteSpan.style.fontWeight = 'bold';
+                  container.appendChild(noteSpan);
+                }
+
+                if (option.quantity_inline) {
+                  const input = document.createElement('input');
+                  input.type = 'number';
+                  input.min = 0;
+                  input.value = 0;
+                  input.name = option.name.replace(/\s+/g, '_');
+                  input.dataset.price = option.price;
+                  input.classList.add('order-quantity');
+                  input.style.marginLeft = '10px';
+                  container.appendChild(input);
+                }
+
+                orderFormContainer.appendChild(container);
+
+                // Dropdown for individual/team
+                if (option.select_team_individual) {
+                  const subOptions = document.createElement('div');
+                  subOptions.style.marginLeft = '20px';
+                  subOptions.style.display = 'flex';
+                  subOptions.style.gap = '10px';
+
+                  ['Individual', 'Team'].forEach(val => {
+                    const selectLabel = document.createElement('label');
+                    selectLabel.style.display = 'flex';
+                    selectLabel.style.alignItems = 'center';
+                    selectLabel.innerText = val + ': ';
+
+                    const select = document.createElement('select');
+                    select.name = `${option.name.replace(/\s+/g, '_')}_${val}`;
+                    const opt = document.createElement('option');
+                    opt.value = val.toLowerCase();
+                    opt.innerText = val;
+                    select.appendChild(opt);
+                    selectLabel.appendChild(select);
+                    subOptions.appendChild(selectLabel);
+                  });
+
+                  orderFormContainer.appendChild(subOptions);
+                }
+              });
+            });
+          }
+        });
       }
     });
 
-    // --- Order groups ---
-    const orderFields = config.fields.filter(f => f.type === 'order');
-    orderFields.forEach(field => {
-      field.groups.forEach(group => {
-        const groupHeader = document.createElement('div');
-        groupHeader.classList.add('group-header');
-        groupHeader.innerText = group.name;
-        orderFormContainer.appendChild(groupHeader);
-
-        group.subSections.forEach(sub => {
-          const subHeader = document.createElement('div');
-          subHeader.classList.add('sub-section-header');
-          subHeader.innerText = sub.name;
-          orderFormContainer.appendChild(subHeader);
-
-          if (sub.note) {
-            const noteEl = document.createElement('div');
-            noteEl.classList.add('sub-section-note');
-            noteEl.innerText = sub.note;
-            orderFormContainer.appendChild(noteEl);
-          }
-
-          sub.options.forEach(option => {
-            const container = document.createElement('div');
-            container.classList.add('order-option');
-
-            const nameEl = document.createElement('div');
-            nameEl.classList.add('order-name');
-            nameEl.innerText = option.name;
-            container.appendChild(nameEl);
-
-            if (option.price !== undefined) {
-              const priceEl = document.createElement('div');
-              priceEl.classList.add('order-price');
-              priceEl.innerText = `$${option.price}`;
-              container.appendChild(priceEl);
-            }
-
-            if (option.quantity_inline) {
-              const qtyInput = document.createElement('input');
-              qtyInput.type = 'number';
-              qtyInput.min = 0;
-              qtyInput.value = 0;
-              qtyInput.classList.add('order-quantity');
-              qtyInput.name = option.name.replace(/\s+/g, '_');
-              container.appendChild(qtyInput);
-            }
-
-            // Individual/Team selectors for specific prints
-            if (option.select_team_individual) {
-              const subOptions = document.createElement('div');
-              subOptions.classList.add('sub-options');
-
-              ['Individual', 'Team'].forEach(val => {
-                const select = document.createElement('select');
-                select.name = `${option.name.replace(/\s+/g, '_')}_${val}`;
-                const opt = document.createElement('option');
-                opt.value = val.toLowerCase();
-                opt.innerText = val;
-                select.appendChild(opt);
-                subOptions.appendChild(select);
-              });
-
-              orderFormContainer.appendChild(container);
-              orderFormContainer.appendChild(subOptions);
-              return;
-            }
-
-            orderFormContainer.appendChild(container);
-          });
-        });
-      });
-    });
-
+    // --- TOTAL DISPLAY ---
     const totalDisplay = document.getElementById('total');
 
     function updateTotal() {
       let total = 0;
       document.querySelectorAll('.order-quantity').forEach(input => {
-        const qty = parseInt(input.value) || 0;
-        const priceEl = input.previousElementSibling; // should be price div
-        let price = 0;
-        if (priceEl && priceEl.classList.contains('order-price')) {
-          price = parseFloat(priceEl.innerText.replace('$', '')) || 0;
-        }
+        const qty = Math.max(0, parseInt(input.value) || 0);
+        const price = parseFloat(input.dataset.price) || 0;
         total += qty * price;
       });
       totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
@@ -118,7 +131,7 @@ fetch('config_order.json')
 
     updateTotal();
 
-    // --- QR Code generation ---
+    // --- GENERATE QR CODE ---
     document.getElementById('qrForm').addEventListener('submit', e => {
       e.preventDefault();
       const formData = new FormData(document.getElementById('qrForm'));
@@ -127,24 +140,25 @@ fetch('config_order.json')
 
       config.fields.forEach(f => {
         if (f.type === 'order') {
-          f.groups.forEach(group => {
-            group.subSections.forEach(sub => {
-              sub.options.forEach(option => {
-                const qtyName = option.name.replace(/\s+/g, '_');
-                const qty = parseInt(formData.get(qtyName)) || 0;
-                values.push(qty);
-                total += qty * (option.price || 0);
-
-                // add team/individual selections if present
-                if (option.select_team_individual) {
-                  ['Individual', 'Team'].forEach(val => {
-                    const sel = formData.get(`${qtyName}_${val}`);
-                    values.push(sel || '');
+          if (f.groups) {
+            f.groups.forEach(group => {
+              if (group.subSections) {
+                group.subSections.forEach(sub => {
+                  sub.options.forEach(option => {
+                    if (option.select_team_individual) {
+                      ['Individual', 'Team'].forEach(val => {
+                        values.push(formData.get(`${option.name.replace(/\s+/g, '_')}_${val}`));
+                      });
+                    } else {
+                      const qty = parseInt(formData.get(option.name.replace(/\s+/g, '_'))) || 0;
+                      values.push(qty);
+                      total += qty * parseFloat(option.price);
+                    }
                   });
-                }
-              });
+                });
+              }
             });
-          });
+          }
         } else {
           values.push(formData.get(f.code));
         }
