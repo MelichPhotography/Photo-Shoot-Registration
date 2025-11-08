@@ -1,5 +1,5 @@
 
-fetch('config.json')
+fetch('config_order.json')
   .then(res => res.json())
   .then(config => {
     document.getElementById('title').innerText = config.title;
