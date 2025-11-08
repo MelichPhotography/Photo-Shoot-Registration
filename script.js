@@ -1,4 +1,3 @@
-// Fetch the external config file
 fetch('config_order.json')
   .then(res => res.json())
   .then(config => {
@@ -7,7 +6,6 @@ fetch('config_order.json')
 
     // --- GENERATE FORM FIELDS ---
     config.fields.forEach(field => {
-      // Non-order fields (Name, Email, Jersey, Team)
       if (field.type !== 'order') {
         const label = document.createElement('label');
         label.style.display = 'block';
@@ -27,13 +25,11 @@ fetch('config_order.json')
       // Order fields
       if (field.groups) {
         field.groups.forEach(group => {
-          // Group header
           const groupHeader = document.createElement('div');
           groupHeader.classList.add('group-header');
           groupHeader.innerText = group.name;
           form.insertBefore(groupHeader, form.querySelector('button'));
 
-          // Group note
           if (group.note) {
             const noteEl = document.createElement('div');
             noteEl.classList.add('group-note');
@@ -41,7 +37,6 @@ fetch('config_order.json')
             form.insertBefore(noteEl, form.querySelector('button'));
           }
 
-          // Options
           group.options.forEach(option => {
             const container = document.createElement('div');
             container.classList.add('order-option');
@@ -54,16 +49,15 @@ fetch('config_order.json')
             input.type = 'number';
             input.min = 0;
             input.value = 0;
-            input.name = `${field.code}_${group.name}_${option.name}`; // unique input name
+            input.name = `${field.code}_${group.name}_${option.name}`;
             input.dataset.price = option.price;
-            input.classList.add('order-quantity'); // counted in total
+            input.classList.add('order-quantity');
             container.appendChild(input);
 
             form.insertBefore(container, form.querySelector('button'));
           });
         });
       } else {
-        // Fallback for flat options
         field.options.forEach(option => {
           const container = document.createElement('div');
           container.classList.add('order-option');
