@@ -32,22 +32,11 @@
       margin-bottom: 20px;
     }
 
-    /* Player info box */
-    .player-info {
+    .player-info, #orderForm {
       padding: 15px;
       border: 1px solid #ccc;
       border-radius: 10px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-      background-color: #fff;
-      margin-bottom: 20px;
-    }
-
-    /* Order form box */
-    #orderForm {
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       background-color: #fff;
       margin-bottom: 20px;
     }
@@ -59,19 +48,46 @@
 
     input[type="text"],
     input[type="email"],
+    input[type="tel"],
     input[type="number"],
-    input[type="tel"] {
+    select {
       padding: 6px 8px;
       margin-top: 4px;
-      width: 100%;
-      box-sizing: border-box;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 6px;
       box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
 
-    /* Group headers */
+    /* Order items flex row */
+    .order-option {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .order-name {
+      flex: 1;
+      font-weight: bold;
+    }
+
+    .order-price {
+      margin-left: 10px;
+      font-weight: bold;
+    }
+
+    .order-quantity {
+      width: 60px;
+      margin-left: 10px;
+      margin-right: 20px;
+    }
+
+    .sub-options {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+
     .group-header {
       font-weight: bold;
       font-size: 1.2em;
@@ -95,29 +111,6 @@
       margin-left: 10px;
       margin-bottom: 12px;
       font-style: italic;
-    }
-
-    .order-option {
-      display: flex;
-      align-items: center;
-      margin-left: 20px;
-      margin-bottom: 8px;
-    }
-
-    .order-option span.name {
-      flex: 1;
-    }
-
-    .order-option span.price {
-      font-weight: bold;
-      margin-left: 10px;
-    }
-
-    input.order-quantity {
-      width: 60px;
-      padding: 4px;
-      font-size: 16px;
-      margin-right: 20px;
     }
 
     #total {
@@ -149,7 +142,7 @@
     }
 
     @media (max-width: 500px) {
-      input.order-quantity {
+      .order-quantity {
         width: 50px;
       }
     }
