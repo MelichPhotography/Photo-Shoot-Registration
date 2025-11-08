@@ -11,6 +11,21 @@
       padding: 20px;
       max-width: 480px;
       margin: auto;
+      background: #fdfdfd;
+      color: #333;
+    }
+
+    /* Logo */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .logo-container img {
+      max-width: 200px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
     h1 {
@@ -31,6 +46,8 @@
       width: 100%;
       box-sizing: border-box;
       font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
 
     /* Group headers */
@@ -57,7 +74,7 @@
 
     .order-option span {
       display: inline-block;
-      width: 180px; /* label width */
+      width: 180px;
     }
 
     input.order-quantity {
@@ -68,8 +85,9 @@
 
     #total {
       font-weight: bold;
-      font-size: 1.1em;
+      font-size: 1.2em;
       margin-top: 15px;
+      color: #0077cc;
     }
 
     #qr {
@@ -82,6 +100,15 @@
       padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
+      background-color: #0077cc;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #005fa3;
     }
 
     @media (max-width: 500px) {
@@ -96,10 +123,16 @@
   </style>
 </head>
 <body>
+  <div class="logo-container">
+    <img src="melich_logo.png" alt="Melich Photography Logo">
+  </div>
+
   <h1 id="title">Loading Form...</h1>
+
   <form id="qrForm">
     <button type="submit">Generate QR Code</button>
   </form>
+
   <div id="qr"></div>
 
   <script src="script.js"></script>
