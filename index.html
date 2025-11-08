@@ -17,7 +17,7 @@
 
     .logo-container {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .logo-container img {
@@ -74,18 +74,18 @@
     /* Group headers */
     .group-header {
       font-weight: bold;
-      font-size: 1.3em;
-      margin-top: 20px;
-      margin-bottom: 10px;
+      font-size: 1.2em;
+      margin-top: 16px;
+      margin-bottom: 8px;
       border-bottom: 1px solid #ccc;
-      padding-bottom: 4px;
+      padding-bottom: 2px;
     }
 
     .sub-section-header {
-      font-weight: bold;
+      font-weight: 700;
       font-size: 1.2em;
       text-decoration: underline;
-      margin-top: 15px;
+      margin-top: 20px;
       margin-bottom: 6px;
     }
 
@@ -99,10 +99,11 @@
 
     .order-option {
       margin-left: 20px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
-    .order-option div {
+    .order-option span {
+      display: block;
       margin-bottom: 4px;
     }
 
@@ -110,7 +111,11 @@
       width: 60px;
       padding: 4px;
       font-size: 16px;
-      margin-top: 2px;
+      margin-left: 10px;
+    }
+
+    input[type="radio"] {
+      margin-left: 10px;
     }
 
     #total {
@@ -141,12 +146,7 @@
       background-color: #005fa3;
     }
 
-    @media (max-width: 600px) {
-      .order-option span {
-        display: block;
-        width: 100%;
-      }
-
+    @media (max-width: 500px) {
       input.order-quantity {
         width: 50px;
       }
