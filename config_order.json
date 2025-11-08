@@ -39,33 +39,45 @@
       "type": "order",
       "groups": [
         {
+          "name": "Digital Images",
+          "subSections": [
+            {
+              "name": "High Resolution Digital Images",
+              "note": "Printable up to 20x24 inches, great for social media. Includes complementary matching high-resolution team image.",
+              "options": [
+                { "name": "1 High Res Image", "price": 50, "quantity_inline": true },
+                { "name": "2 High Res Image ($100 Value)", "price": 90, "quantity_inline": true },
+                { "name": "3 High Res Image ($150 Value)", "price": 120, "quantity_inline": true }
+              ]
+            },
+            {
+              "name": "Low Resolution Digital Images",
+              "note": "Printable up to 8x12 inches, great for social media. Includes complementary matching low-resolution team image.",
+              "options": [
+                { "name": "1 Low Res Image", "price": 35, "quantity_inline": true },
+                { "name": "2 Low Res Images ($70 Value)", "price": 60, "quantity_inline": true },
+                { "name": "3 Low Res Images ($105 Value)", "price": 75, "quantity_inline": true }
+              ]
+            }
+          ]
+        },
+        {
           "name": "Digital & Print Packages",
           "subSections": [
+            {
+              "name": "Package 1",
+              "note": "(1) Low res digital image\n(1) 8x10 Memory Mate print",
+              "options": [
+                { "name": "Package Price", "price": 50, "quantity_inline": true, "note": "($60 Value)" }
+              ]
+            },
             {
               "name": "Package 2",
               "note": "(1) Low res digital image\n(1) 4x5 print\n(1) 5x7 print",
               "options": [
-                {
-                  "name": "($63 Value)",
-                  "price": 50,
-                  "quantity_inline": true
-                },
-                {"name": "(1) Low res digital image",
-                  "price": 0,
-                  "quantity_inline": true
-                }
-                {
-                  "name": "(1) 4x5 print",
-                  "price": 0,
-                  "quantity_inline": false,
-                  "select_team_individual": true
-                },
-                {
-                  "name": "(1) 5x7 print",
-                  "price": 0,
-                  "quantity_inline": false,
-                  "select_team_individual": true
-                }
+                { "name": "Package Price", "price": 50, "quantity_inline": true, "note": "($63 Value)" },
+                { "name": "(1) 4x5 print", "price": 0, "select_team_individual": true },
+                { "name": "(1) 5x7 print", "price": 0, "select_team_individual": true }
               ]
             }
           ]
