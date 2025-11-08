@@ -45,18 +45,18 @@
               "name": "High Resolution Digital Images",
               "note": "Printable up to 20x24 inches, great for sharing on social media. Includes complementary matching high-resolution team image.",
               "options": [
-                { "name": "1 high res image", "price": 50 },
-                { "name": "2 high res images", "price": 90 },
-                { "name": "3 high res images", "price": 120 }
+                { "name": "1 High Resolution Digital Image", "price": 50 },
+                { "name": "2 High Resolution Digital Images", "price": 90 },
+                { "name": "3 High Resolution Digital Images", "price": 120 }
               ]
             },
             {
               "name": "Low Resolution Digital Images",
               "note": "Printable up to 8x12 inches, great for sharing on social media. Includes complementary matching low-resolution team image.",
               "options": [
-                { "name": "1 low res image", "price": 35 },
-                { "name": "2 low res images", "price": 60 },
-                { "name": "3 low res images", "price": 75 }
+                { "name": "1 Low Resolution Digital Image", "price": 35 },
+                { "name": "2 Low Resolution Digital Images", "price": 60 },
+                { "name": "3 Low Resolution Digital Images", "price": 75 }
               ]
             }
           ]
@@ -66,21 +66,20 @@
           "subSections": [
             {
               "name": "Package 1",
-              "note": "Select quantity for this package. $50 (a $60 value)",
+              "note": "(1) Low res digital image + (1) 8x10 Memory Mate print",
               "options": [
-                { "name": "(1) Low res digital image", "price": 50 },
-                { "name": "(1) 8x10 Memory Mate print", "price": 0 }
+                { "name": "(1) Low res digital image + (1) 8x10 Memory Mate print", "price": 50 }
               ]
             },
             {
               "name": "Package 2",
-              "note": "$50 (a $63 value). Select individual or team for each print.",
+              "note": "(1) Low res digital image + (1) 4x5 print + (1) 5x7 print",
               "options": [
                 { "name": "(1) Low res digital image", "price": 50 },
-                { "name": "(1) 4x5 print - Individual", "price": 0, "selectionType": "radio", "group": "4x5" },
-                { "name": "(1) 4x5 print - Team", "price": 0, "selectionType": "radio", "group": "4x5" },
-                { "name": "(1) 5x7 print - Individual", "price": 0, "selectionType": "radio", "group": "5x7" },
-                { "name": "(1) 5x7 print - Team", "price": 0, "selectionType": "radio", "group": "5x7" }
+                { "name": "(1) 4x5 print - Individual", "price": 0, "type": "radio", "group": "4x5" },
+                { "name": "(1) 4x5 print - Team", "price": 0, "type": "radio", "group": "4x5" },
+                { "name": "(1) 5x7 print - Individual", "price": 0, "type": "radio", "group": "5x7" },
+                { "name": "(1) 5x7 print - Team", "price": 0, "type": "radio", "group": "5x7" }
               ]
             }
           ]
