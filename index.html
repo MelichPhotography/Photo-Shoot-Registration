@@ -9,7 +9,7 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      max-width: 600px;
+      max-width: 500px;
       margin: auto;
       background: #fdfdfd;
       color: #333;
@@ -103,19 +103,14 @@
     }
 
     .order-option span {
-      display: block;
-      margin-bottom: 4px;
+      display: inline-block;
+      min-width: 220px;
     }
 
     input.order-quantity {
       width: 60px;
       padding: 4px;
       font-size: 16px;
-      margin-left: 10px;
-    }
-
-    input[type="radio"] {
-      margin-left: 10px;
     }
 
     #total {
@@ -147,6 +142,10 @@
     }
 
     @media (max-width: 500px) {
+      .order-option span {
+        width: 140px;
+      }
+
       input.order-quantity {
         width: 50px;
       }
