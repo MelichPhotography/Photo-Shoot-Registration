@@ -73,13 +73,9 @@
             },
             {
               "name": "Package 2",
-              "note": "(a $63 value)",
+              "note": "(1) Low res digital image\n(1) 4x5 print\n(1) 5x7 print",
               "options": [
-                { "name": "(1) Low res digital image + (1) 4x5 print + (1) 5x7 print", "price": 50, "quantity_inline": true },
-                { "name": "   - Individual 4x5 print", "price": 0, "quantity_inline": true },
-                { "name": "   - Team 4x5 print", "price": 0, "quantity_inline": true },
-                { "name": "   - Individual 5x7 print", "price": 0, "quantity_inline": true },
-                { "name": "   - Team 5x7 print", "price": 0, "quantity_inline": true }
+                { "name": "($63 Value)", "price": 50, "quantity_inline": true }
               ]
             }
           ]
