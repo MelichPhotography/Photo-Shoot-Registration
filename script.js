@@ -25,11 +25,13 @@ fetch('config_order.json')
       // Order fields
       if (field.groups) {
         field.groups.forEach(group => {
+          // Section title for the group
           const groupHeader = document.createElement('div');
           groupHeader.classList.add('group-header');
           groupHeader.innerText = group.name;
           form.insertBefore(groupHeader, form.querySelector('button'));
 
+          // Optional group note
           if (group.note) {
             const noteEl = document.createElement('div');
             noteEl.classList.add('group-note');
@@ -37,6 +39,7 @@ fetch('config_order.json')
             form.insertBefore(noteEl, form.querySelector('button'));
           }
 
+          // Options in the group
           group.options.forEach(option => {
             const container = document.createElement('div');
             container.classList.add('order-option');
@@ -56,26 +59,6 @@ fetch('config_order.json')
 
             form.insertBefore(container, form.querySelector('button'));
           });
-        });
-      } else {
-        field.options.forEach(option => {
-          const container = document.createElement('div');
-          container.classList.add('order-option');
-
-          const nameLabel = document.createElement('span');
-          nameLabel.innerText = `${option.name} ($${option.price})`;
-          container.appendChild(nameLabel);
-
-          const input = document.createElement('input');
-          input.type = 'number';
-          input.min = 0;
-          input.value = 0;
-          input.name = option.name;
-          input.dataset.price = option.price;
-          input.classList.add('order-quantity');
-          container.appendChild(input);
-
-          form.insertBefore(container, form.querySelector('button'));
         });
       }
     });
@@ -116,15 +99,9 @@ fetch('config_order.json')
               group.options.forEach(option => {
                 const inputName = `${f.code}_${group.name}_${option.name}`;
                 const qty = parseInt(formData.get(inputName)) || 0;
-                values.push(qty);
+                values.push(qty); // only numbers for quantities
                 total += qty * parseFloat(option.price);
               });
-            });
-          } else {
-            f.options.forEach(option => {
-              const qty = parseInt(formData.get(option.name)) || 0;
-              values.push(qty);
-              total += qty * parseFloat(option.price);
             });
           }
         } else {
@@ -132,7 +109,7 @@ fetch('config_order.json')
         }
       });
 
-      values.push(total.toFixed(2));
+      values.push(total.toFixed(2)); // append total at end
       const qrText = values.join('\t') + '\n';
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
