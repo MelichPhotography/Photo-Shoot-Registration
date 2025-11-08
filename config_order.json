@@ -29,30 +29,24 @@
       "label": "Digital Images",
       "type": "order",
       "code": "digitalImages",
-      "options": [
+      "groups": [
         {
-          "name": "High Resolution Digital Image - 1",
-          "price": 50
+          "name": "High Resolution (up to 20x24, good for prints)",
+          "note": "All high-res digital purchases include a complementary team digital of the same resolution",
+          "options": [
+            { "name": "1", "price": 50 },
+            { "name": "2", "price": 90 },
+            { "name": "3", "price": 120 }
+          ]
         },
         {
-          "name": "High Resolution Digital Images - 2",
-          "price": 90
-        },
-        {
-          "name": "High Resolution Digital Images - 3",
-          "price": 120
-        },
-        {
-          "name": "Low Resolution Digital Image - 1",
-          "price": 35
-        },
-        {
-          "name": "Low Resolution Digital Images - 2",
-          "price": 60
-        },
-        {
-          "name": "Low Resolution Digital Images - 3",
-          "price": 75
+          "name": "Low Resolution (up to 8x12, good for social media)",
+          "note": "All low-res digital purchases include a complementary team digital of the same resolution",
+          "options": [
+            { "name": "1", "price": 35 },
+            { "name": "2", "price": 60 },
+            { "name": "3", "price": 75 }
+          ]
         }
       ]
     },
@@ -61,10 +55,7 @@
       "type": "order",
       "code": "digitalPrintPackages",
       "options": [
-        {
-          "name": "Placeholder Item 1",
-          "price": 0
-        }
+        { "name": "Placeholder Item 1", "price": 0 }
       ]
     },
     {
@@ -72,10 +63,7 @@
       "type": "order",
       "code": "printPackages",
       "options": [
-        {
-          "name": "Placeholder Item 1",
-          "price": 0
-        }
+        { "name": "Placeholder Item 1", "price": 0 }
       ]
     }
   ]
