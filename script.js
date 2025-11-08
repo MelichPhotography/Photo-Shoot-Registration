@@ -15,31 +15,16 @@ fetch('config_order.json')
         label.innerText = field.label;
 
         const input = document.createElement('input');
-        input.type = field.type === 'number' ? 'tel' : field.type; // phone as tel
+        input.type = field.type;
         input.name = field.code;
-        input.required = field.required || false;
-
-        // --- Phone formatting ---
-        if (field.code === 'phone') {
-          input.addEventListener('input', (e) => {
-            let val = input.value.replace(/\D/g, '');
-            if (val.length > 10) val = val.slice(0, 10);
-            if (val.length > 6) {
-              input.value = `(${val.slice(0,3)}) ${val.slice(3,6)}-${val.slice(6)}`;
-            } else if (val.length > 3) {
-              input.value = `(${val.slice(0,3)}) ${val.slice(3)}`;
-            } else if (val.length > 0) {
-              input.value = `(${val}`;
-            }
-          });
-        }
-
+        if (field.required) input.required = true;
         label.appendChild(input);
+
         playerInfoContainer.appendChild(label);
         return;
       }
 
-      // --- ORDER GROUPS ---
+      // Order groups
       if (field.groups) {
         field.groups.forEach(group => {
           const groupHeader = document.createElement('div');
@@ -77,6 +62,26 @@ fetch('config_order.json')
                 input.dataset.price = option.price;
                 input.classList.add('order-quantity');
                 container.appendChild(input);
+
+                // If option has variants (like individual vs team prints)
+                if (option.variants) {
+                  const variantContainer = document.createElement('div');
+                  variantContainer.style.marginLeft = '20px';
+                  option.variants.forEach(variant => {
+                    const variantLabel = document.createElement('label');
+                    variantLabel.style.marginRight = '10px';
+
+                    const variantInput = document.createElement('input');
+                    variantInput.type = 'radio';
+                    variantInput.name = `${input.name}_variant`;
+                    variantInput.value = variant.value;
+
+                    variantLabel.appendChild(variantInput);
+                    variantLabel.append(` ${variant.name}`);
+                    variantContainer.appendChild(variantLabel);
+                  });
+                  container.appendChild(variantContainer);
+                }
 
                 orderFormContainer.appendChild(container);
               });
@@ -121,8 +126,14 @@ fetch('config_order.json')
                   sub.options.forEach(option => {
                     const inputName = `${f.code}_${group.name}_${sub.name}_${option.name}`;
                     const qty = parseInt(formData.get(inputName)) || 0;
-                    values.push(qty); // only numbers
+                    values.push(qty);
                     total += qty * parseFloat(option.price);
+
+                    // Add selected variant value if applicable
+                    if (option.variants) {
+                      const variantValue = formData.get(`${inputName}_variant`) || '';
+                      values.push(variantValue);
+                    }
                   });
                 });
               }
@@ -133,12 +144,11 @@ fetch('config_order.json')
         }
       });
 
-      values.push(total.toFixed(2)); // add total at the end
+      values.push(total.toFixed(2));
       const qrText = values.join('\t') + '\n';
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
     });
-
   })
   .catch(err => {
     console.error('Error loading config:', err);
