@@ -9,7 +9,7 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
       background: #fdfdfd;
       color: #333;
@@ -74,18 +74,18 @@
     /* Group headers */
     .group-header {
       font-weight: bold;
-      font-size: 1.2em;
-      margin-top: 16px;
-      margin-bottom: 8px;
+      font-size: 1.3em;
+      margin-top: 20px;
+      margin-bottom: 10px;
       border-bottom: 1px solid #ccc;
-      padding-bottom: 2px;
+      padding-bottom: 4px;
     }
 
     .sub-section-header {
       font-weight: 700;
       font-size: 1.2em;
       text-decoration: underline;
-      margin-top: 20px;
+      margin-top: 16px;
       margin-bottom: 6px;
     }
 
@@ -99,18 +99,29 @@
 
     .order-option {
       margin-left: 20px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .order-option span {
       display: inline-block;
-      width: 200px;
+      width: 220px;
     }
 
     input.order-quantity {
       width: 60px;
       padding: 4px;
       font-size: 16px;
+    }
+
+    .variant-options {
+      margin-left: 25px;
+      margin-top: 4px;
+    }
+
+    .variant-options label {
+      margin-right: 15px;
+      font-weight: normal;
+      font-size: 0.95em;
     }
 
     #total {
@@ -141,9 +152,9 @@
       background-color: #005fa3;
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 600px) {
       .order-option span {
-        width: 140px;
+        width: 150px;
       }
 
       input.order-quantity {
@@ -160,12 +171,8 @@
   <h1 id="title">Loading Form...</h1>
 
   <form id="qrForm">
-    <!-- Player Info Section -->
     <div class="player-info" id="playerInfo"></div>
-
-    <!-- Order Form Section -->
     <div id="orderForm"></div>
-
     <div id="total"></div>
     <button type="submit">Generate QR Code</button>
   </form>
