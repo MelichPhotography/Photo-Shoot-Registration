@@ -15,16 +15,31 @@ fetch('config_order.json')
         label.innerText = field.label;
 
         const input = document.createElement('input');
-        input.type = field.type;
+        input.type = field.type === 'number' ? 'tel' : field.type; // phone as tel
         input.name = field.code;
-        if (field.required) input.required = true;
-        label.appendChild(input);
+        input.required = field.required || false;
 
+        // --- Phone formatting ---
+        if (field.code === 'phone') {
+          input.addEventListener('input', (e) => {
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 10) val = val.slice(0, 10);
+            if (val.length > 6) {
+              input.value = `(${val.slice(0,3)}) ${val.slice(3,6)}-${val.slice(6)}`;
+            } else if (val.length > 3) {
+              input.value = `(${val.slice(0,3)}) ${val.slice(3)}`;
+            } else if (val.length > 0) {
+              input.value = `(${val}`;
+            }
+          });
+        }
+
+        label.appendChild(input);
         playerInfoContainer.appendChild(label);
         return;
       }
 
-      // Order groups
+      // --- ORDER GROUPS ---
       if (field.groups) {
         field.groups.forEach(group => {
           const groupHeader = document.createElement('div');
@@ -106,7 +121,7 @@ fetch('config_order.json')
                   sub.options.forEach(option => {
                     const inputName = `${f.code}_${group.name}_${sub.name}_${option.name}`;
                     const qty = parseInt(formData.get(inputName)) || 0;
-                    values.push(qty);
+                    values.push(qty); // only numbers
                     total += qty * parseFloat(option.price);
                   });
                 });
@@ -118,11 +133,12 @@ fetch('config_order.json')
         }
       });
 
-      values.push(total.toFixed(2));
+      values.push(total.toFixed(2)); // add total at the end
       const qrText = values.join('\t') + '\n';
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
     });
+
   })
   .catch(err => {
     console.error('Error loading config:', err);
