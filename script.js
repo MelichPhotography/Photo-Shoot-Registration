@@ -51,28 +51,26 @@ fetch('config_order.json')
                 container.classList.add('order-option');
 
                 const nameLabel = document.createElement('span');
-                nameLabel.innerText = option.name;
+                nameLabel.innerText = `${option.name}${option.price ? ' ($' + option.price + ')' : ''}`;
                 container.appendChild(nameLabel);
 
-                let input;
-                if (option.selectionType === 'radio') {
-                  input = document.createElement('input');
-                  input.type = 'radio';
-                  input.name = option.group;
-                  input.value = option.name;
-                  input.dataset.price = option.price;
+                if(option.type === 'radio') {
+                  const radio = document.createElement('input');
+                  radio.type = 'radio';
+                  radio.name = option.group;
+                  radio.classList.add('radio-option');
+                  container.appendChild(radio);
                 } else {
-                  input = document.createElement('input');
+                  const input = document.createElement('input');
                   input.type = 'number';
                   input.min = 0;
                   input.value = 0;
-                  input.name = `${group.name}_${sub.name}_${option.name}`;
-                  input.dataset.price = option.price;
+                  input.name = `${field.code}_${group.name}_${sub.name}_${option.name}`;
+                  input.dataset.price = option.price || 0;
                   input.classList.add('order-quantity');
-                  input.style.marginLeft = '10px';
+                  container.appendChild(input);
                 }
 
-                container.appendChild(input);
                 orderFormContainer.appendChild(container);
               });
             });
@@ -86,24 +84,20 @@ fetch('config_order.json')
 
     function updateTotal() {
       let total = 0;
-
-      // Number inputs
       document.querySelectorAll('.order-quantity').forEach(input => {
         const qty = Math.max(0, parseInt(input.value) || 0);
         const price = parseFloat(input.dataset.price) || 0;
         total += qty * price;
       });
-
-      // Radio inputs
-      document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
-        total += parseFloat(input.dataset.price) || 0;
-      });
-
       totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
     }
 
-    document.querySelectorAll('.order-quantity, input[type="radio"]').forEach(input => {
+    document.querySelectorAll('.order-quantity').forEach(input => {
       input.addEventListener('input', updateTotal);
+    });
+
+    // Radio buttons do not affect price
+    document.querySelectorAll('.radio-option').forEach(input => {
       input.addEventListener('change', updateTotal);
     });
 
@@ -123,16 +117,17 @@ fetch('config_order.json')
               if (group.subSections) {
                 group.subSections.forEach(sub => {
                   sub.options.forEach(option => {
-                    let qtyOrSelection = 0;
-                    if (option.selectionType === 'radio') {
-                      const selected = formData.get(option.group);
-                      qtyOrSelection = (selected === option.name) ? 1 : 0;
-                      total += qtyOrSelection * parseFloat(option.price);
+                    if(option.type === 'radio') {
+                      const radios = document.getElementsByName(option.group);
+                      let selected = '';
+                      radios.forEach(r => { if(r.checked) selected = option.name; });
+                      values.push(selected);
                     } else {
-                      qtyOrSelection = parseInt(formData.get(`${group.name}_${sub.name}_${option.name}`)) || 0;
-                      total += qtyOrSelection * parseFloat(option.price);
+                      const inputName = `${f.code}_${group.name}_${sub.name}_${option.name}`;
+                      const qty = parseInt(formData.get(inputName)) || 0;
+                      values.push(qty);
+                      total += qty * parseFloat(option.price || 0);
                     }
-                    values.push(qtyOrSelection);
                   });
                 });
               }
@@ -148,6 +143,7 @@ fetch('config_order.json')
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
     });
+
   })
   .catch(err => {
     console.error('Error loading config:', err);
