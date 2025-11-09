@@ -241,12 +241,12 @@ document.getElementById('downloadReceipt').addEventListener('click', async () =>
   // Safely clone QR code for receipt
 const qrContainer = document.getElementById('qr');
 if (qrContainer) {
+  // Look for canvas or img
   const qrCanvas = qrContainer.querySelector('canvas');
   const qrImg = qrContainer.querySelector('img');
   let qrClone;
 
   if (qrCanvas) {
-    // If it's a canvas, convert to image
     qrClone = document.createElement('img');
     qrClone.src = qrCanvas.toDataURL();
   } else if (qrImg) {
@@ -255,8 +255,12 @@ if (qrContainer) {
 
   if (qrClone) {
     receiptEl.querySelector('#qrForDownload').appendChild(qrClone);
+  } else {
+    // Optional: add placeholder text if QR not generated yet
+    receiptEl.querySelector('#qrForDownload').innerText = 'QR code not generated.';
   }
 }
+
 
 
   // Convert to canvas and PDF
