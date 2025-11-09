@@ -76,8 +76,8 @@
               "note": "(1) Low res digital image\n(1) 4x5 print\n(1) 5x7 print",
               "options": [
                 { "name": "Package Price ($63 Value)", "price": 50, "quantity_inline": true },
-                { "name": "4x5 Print Selection", "select_team_individual": true },
-                { "name": "5x7 Print Selection", "select_team_individual": true }
+                { "name": "4x5 Print Selection", "select_team_individual": true, "default": "individual" },
+                { "name": "5x7 Print Selection", "select_team_individual": true, "default": "team" }
               ]
             }
           ]
@@ -96,8 +96,8 @@
               "note": "(1) 4x5 print\n(1) 5x7 print",
               "options": [
                 { "name": "Package Price ($28 Value)", "price": 25, "quantity_inline": true },
-                { "name": "4x5 Print Selection", "select_team_individual": true },
-                { "name": "5x7 Print Selection", "select_team_individual": true }
+                { "name": "4x5 Print Selection", "select_team_individual": true, "default": "individual" },
+                { "name": "5x7 Print Selection", "select_team_individual": true, "default": "team" }
               ]
             },
             {
@@ -105,8 +105,8 @@
               "note": "(1) 5x7 print\n(1) 8x10 print",
               "options": [
                 { "name": "Package Price ($41 Value)", "price": 35, "quantity_inline": true },
-                { "name": "5x7 Print Selection", "select_team_individual": true },
-                { "name": "8x10 Print Selection", "select_team_individual": true }
+                { "name": "5x7 Print Selection", "select_team_individual": true, "default": "individual" },
+                { "name": "8x10 Print Selection", "select_team_individual": true, "default": "team" }
               ]
             },
             {
