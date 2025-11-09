@@ -72,6 +72,7 @@ fetch('config_order.json')
                   input.type = 'number';
                   input.min = 0;
                   input.value = 0;
+                  input.placeholder = 'Quantity';
                   input.name = `${sub.name}_${option.name}`;
                   input.dataset.price = option.price;
                   input.classList.add('order-quantity');
