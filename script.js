@@ -89,21 +89,38 @@ fetch('config_order.json')
 
 
                 } else if (option.select_team_individual) {
-                  const label = document.createElement('span');
-                  label.innerText = option.name;
-                  label.style.width = '150px';
-                  container.appendChild(label);
+  const label = document.createElement('span');
+  label.innerText = option.name;
+  label.style.width = '150px';
+  container.appendChild(label);
 
-                  const select = document.createElement('select');
-                  select.name = `${sub.name}_${option.name}`;
-                  ['Individual', 'Team'].forEach(opt => {
-                    const optionEl = document.createElement('option');
-                    optionEl.value = opt;
-                    optionEl.innerText = opt;
-                    select.appendChild(optionEl);
-                  });
-                  container.appendChild(select);
-                }
+  const select = document.createElement('select');
+  select.name = `${sub.name}_${option.name}`;
+
+  // Add options including a placeholder
+  const noneOption = document.createElement('option');
+  noneOption.value = "";
+  noneOption.innerText = "Select One";
+  select.appendChild(noneOption);
+
+  ['Team', 'Individual'].forEach(opt => {
+    const optionEl = document.createElement('option');
+    optionEl.value = opt.toLowerCase();
+    optionEl.innerText = opt;
+    select.appendChild(optionEl);
+  });
+
+  // Apply default if provided in config
+  if (option.default === "team") {
+    select.value = "team";
+  } else if (option.default === "individual") {
+    select.value = "individual";
+  } else {
+    select.value = ""; // Default to placeholder
+  }
+
+  container.appendChild(select);
+}
 
                 orderFormContainer.appendChild(container);
               });
