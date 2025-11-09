@@ -62,6 +62,7 @@ fetch('config_order.json')
                   const priceLabel = document.createElement('span');
                   priceLabel.classList.add('option-price');
                   priceLabel.innerText = `$${option.price}`;
+                  priceLabel.style.fontWeight = 'bold';
                   priceLabel.style.width = '60px';
                   priceLabel.style.textAlign = 'right';
                   priceLabel.style.marginRight = '10px';
