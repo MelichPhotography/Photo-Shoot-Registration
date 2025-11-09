@@ -80,7 +80,7 @@ fetch('config_order.json')
                   container.appendChild(input);
 
                   const qtyHint = document.createElement('span');
-                  qtyHint.innerText = 'Qty';
+                  qtyHint.innerText = 'Qty:';
                   qtyHint.style.fontSize = '0.8em';
                   qtyHint.style.color = '#555';
                   qtyHint.style.marginLeft = '5px';
