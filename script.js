@@ -181,46 +181,94 @@ fetch('config_order.json')
       new QRCode(qrContainer, qrText);
     });
 
-    // --- DOWNLOAD RECEIPT ---
-    document.getElementById('downloadReceipt').addEventListener('click', () => {
-      const formData = new FormData(document.getElementById('qrForm'));
-      let receipt = 'Melich Photography Order Receipt\n\n';
-      config.fields.forEach(f => {
-        if(f.type === 'order') {
-          f.groups.forEach(group => {
-            receipt += `${group.name}:\n`;
-            group.subSections.forEach(sub => {
-              receipt += `  ${sub.name}:\n`;
-              sub.options.forEach(option => {
-                if(option.quantity_inline) {
-                  const inputName = `${sub.name}_${option.name}`;
-                  const qty = parseInt(formData.get(inputName)) || 0;
-                  receipt += `    ${option.name} x${qty} - $${(qty*option.price).toFixed(2)}\n`;
-                } else if(option.select_team_individual) {
-                  const selection = formData.get(`${sub.name}_${option.name}`) || 'N/A';
-                  receipt += `    ${option.name}: ${selection}\n`;
-                } else if(option.price) {
-                  receipt += `    ${option.name} - $${option.price}\n`;
-                } else {
-                  receipt += `    ${option.name}\n`;
-                }
-              });
-            });
-          });
-        } else {
-          receipt += `${f.label}: ${formData.get(f.code)}\n`;
-        }
-      });
-      receipt += `\nTotal: ${totalDisplay.innerText}\n`;
+    // ...[previous setup code unchanged]...
 
-      const blob = new Blob([receipt], {type:'text/plain'});
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'order_receipt.txt';
-      link.click();
-    });
-  })
-  .catch(err => {
-    console.error('Error loading config:', err);
-    document.getElementById('title').innerText = 'Error loading form';
+// --- DOWNLOAD RECEIPT WITH QR IMAGE ---
+document.getElementById('downloadReceipt').addEventListener('click', () => {
+  const formData = new FormData(document.getElementById('qrForm'));
+
+  // Prepare HTML receipt
+  let receiptHTML = `
+    <html>
+    <head><title>Melich Photography Order Receipt</title></head>
+    <body>
+      <h2>Melich Photography Order Receipt</h2>
+      <ul>
+  `;
+
+  let total = 0;
+
+  config.fields.forEach(f => {
+    if (f.type === 'order') {
+      f.groups.forEach(group => {
+        let groupHTML = `<li><strong>${group.name}</strong><ul>`;
+        group.subSections.forEach(sub => {
+          let subHTML = `<li>${sub.name}<ul>`;
+          sub.options.forEach(option => {
+            if (option.quantity_inline) {
+              const inputName = `${sub.name}_${option.name}`;
+              const qty = parseInt(formData.get(inputName)) || 0;
+              if (qty > 0) { // only include items with quantity > 0
+                const lineTotal = (qty * parseFloat(option.price)).toFixed(2);
+                total += parseFloat(lineTotal);
+                subHTML += `<li>${option.name} x${qty} - $${lineTotal}</li>`;
+              }
+            } else if (option.select_team_individual) {
+              const selection = formData.get(`${sub.name}_${option.name}`);
+              if (selection) {
+                subHTML += `<li>${option.name}: ${selection}</li>`;
+              }
+            } else if (option.price) {
+              subHTML += `<li>${option.name} - $${option.price}</li>`;
+            }
+          });
+          subHTML += `</ul></li>`;
+          groupHTML += subHTML;
+        });
+        groupHTML += `</ul></li>`;
+        receiptHTML += groupHTML;
+      });
+    } else {
+      const value = formData.get(f.code);
+      if (value) {
+        receiptHTML += `<li>${f.label}: ${value}</li>`;
+      }
+    }
   });
+
+  receiptHTML += `
+      </ul>
+      <p><strong>Total: $${total.toFixed(2)}</strong></p>
+      <div id="qrReceipt"></div>
+    </body>
+    </html>
+  `;
+
+  // Create a temporary document to generate QR in it
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = receiptHTML;
+  const qrReceiptDiv = tempDiv.querySelector('#qrReceipt');
+
+  // Generate QR code
+  const qrText = Array.from(formData.entries())
+    .map(([key, value]) => `${key}: ${value}`).join('\n');
+  const qrCode = new QRCode(qrReceiptDiv, {
+    text: qrText,
+    width: 128,
+    height: 128
+  });
+
+  // Convert the QR code canvas to data URL
+  const canvas = qrReceiptDiv.querySelector('canvas');
+  if (canvas) {
+    const imgData = canvas.toDataURL('image/png');
+    qrReceiptDiv.innerHTML = `<img src="${imgData}" alt="QR Code">`;
+  }
+
+  // Save receipt as HTML file
+  const blob = new Blob([tempDiv.innerHTML], { type: 'text/html' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'order_receipt.html';
+  link.click();
+});
