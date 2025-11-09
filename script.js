@@ -205,6 +205,58 @@ else {
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
     });
+
+    // --- DOWNLOAD RECEIPT ---
+document.getElementById('downloadReceipt').addEventListener('click', async () => {
+  const receiptEl = document.createElement('div');
+  receiptEl.style.padding = '20px';
+  receiptEl.style.background = '#fff';
+  receiptEl.style.width = '400px';
+  receiptEl.style.fontFamily = 'Arial, sans-serif';
+  receiptEl.innerHTML = `
+    <h2>${config.title}</h2>
+    <h3>Player Info</h3>
+    <p>Name: ${document.querySelector('input[name="player_name"]').value}</p>
+    <p>Parent: ${document.querySelector('input[name="parent_name"]').value}</p>
+    <p>Phone: ${document.querySelector('input[name="phone"]').value}</p>
+    <p>Email: ${document.querySelector('input[name="email"]').value}</p>
+    <h3>Order Summary</h3>
+    <ul>
+      ${Array.from(document.querySelectorAll('.order-quantity')).map(input => {
+        const qty = parseInt(input.value);
+        if (qty > 0) {
+          const price = parseFloat(input.dataset.price);
+          return `<li>${input.name}: ${qty} × $${price} = $${(qty*price).toFixed(2)}</li>`;
+        }
+        return '';
+      }).join('')}
+    </ul>
+    <h3>${totalDisplay.innerText}</h3>
+    <h3>QR Code</h3>
+    <div id="qrForDownload"></div>
+  `;
+
+  // Clone the QR code
+  const originalQR = document.getElementById('qr').querySelector('img');
+  if (originalQR) {
+    const qrClone = originalQR.cloneNode();
+    receiptEl.querySelector('#qrForDownload').appendChild(qrClone);
+  }
+
+  // Convert to canvas and PDF
+  const canvas = await html2canvas(receiptEl);
+  const imgData = canvas.toDataURL('image/png');
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'px',
+    format: [canvas.width, canvas.height]
+  });
+  pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+  pdf.save('receipt.pdf');
+});
+    
   })
   .catch(err => {
     console.error('Error loading config:', err);
