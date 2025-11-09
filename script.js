@@ -68,6 +68,13 @@ fetch('config_order.json')
                   priceLabel.style.marginRight = '10px';
                   container.appendChild(priceLabel);
 
+                  const qtyHint = document.createElement('span');
+                  qtyHint.innerText = 'Qty:';
+                  qtyHint.style.fontSize = '0.8em';
+                  qtyHint.style.color = '#555';
+                  qtyHint.style.marginLeft = '5px';
+                  container.appendChild(qtyHint);
+                  
                   const input = document.createElement('input');
                   input.type = 'number';
                   input.min = 0;
@@ -79,12 +86,6 @@ fetch('config_order.json')
                   input.style.marginRight = '10px';
                   container.appendChild(input);
 
-                  const qtyHint = document.createElement('span');
-                  qtyHint.innerText = 'Qty:';
-                  qtyHint.style.fontSize = '0.8em';
-                  qtyHint.style.color = '#555';
-                  qtyHint.style.marginLeft = '5px';
-                  container.appendChild(qtyHint);
 
                 } else if (option.select_team_individual) {
                   const label = document.createElement('span');
