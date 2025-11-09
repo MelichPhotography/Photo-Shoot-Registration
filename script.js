@@ -105,6 +105,22 @@ fetch('config_order.json')
       }
     });
 
+    // --- PHONE NUMBER LIVE FORMAT ---
+    const phoneInput = playerInfoContainer.querySelector('input[type="tel"]');
+    if (phoneInput) {
+      phoneInput.addEventListener('input', e => {
+        let cleaned = phoneInput.value.replace(/\D/g, '');
+        if (cleaned.length > 10) cleaned = cleaned.slice(0, 10);
+
+        let formatted = '';
+        if (cleaned.length > 0) formatted += '(' + cleaned.slice(0, 3);
+        if (cleaned.length >= 4) formatted += ') ' + cleaned.slice(3, 6);
+        if (cleaned.length >= 7) formatted += '-' + cleaned.slice(6, 10);
+
+        phoneInput.value = formatted;
+      });
+    }
+    
     // --- TOTAL DISPLAY ---
     const totalDisplay = document.getElementById('total');
 
