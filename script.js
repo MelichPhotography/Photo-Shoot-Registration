@@ -29,94 +29,95 @@ fetch('config_order.json')
           groupHeader.innerText = group.name;
           orderFormContainer.appendChild(groupHeader);
 
-          if (group.subSections) {
-            group.subSections.forEach(sub => {
-              const subHeader = document.createElement('div');
-              subHeader.classList.add('sub-section-header');
-              subHeader.innerText = sub.name;
-              orderFormContainer.appendChild(subHeader);
+          group.subSections.forEach(sub => {
+            const subHeader = document.createElement('div');
+            subHeader.classList.add('sub-section-header');
+            subHeader.innerText = sub.name;
+            orderFormContainer.appendChild(subHeader);
 
-              if (sub.note) {
-                const noteEl = document.createElement('div');
-                noteEl.classList.add('sub-section-note');
-                noteEl.innerText = sub.note;
-                orderFormContainer.appendChild(noteEl);
+            if (sub.note) {
+              const noteEl = document.createElement('div');
+              noteEl.classList.add('sub-section-note');
+              noteEl.innerText = sub.note;
+              orderFormContainer.appendChild(noteEl);
+            }
+
+            sub.options.forEach(option => {
+              const container = document.createElement('div');
+              container.classList.add('order-option');
+
+              // Quantity input
+              if (option.quantity_inline) {
+                const nameLabel = document.createElement('span');
+                nameLabel.classList.add('option-name');
+                nameLabel.innerText = option.name;
+                container.appendChild(nameLabel);
+
+                const priceLabel = document.createElement('span');
+                priceLabel.classList.add('option-price');
+                priceLabel.innerText = `$${option.price}`;
+                priceLabel.style.fontWeight = 'bold';
+                container.appendChild(priceLabel);
+
+                const qtyHint = document.createElement('span');
+                qtyHint.classList.add('option-quantity');
+                qtyHint.innerText = 'Qty:';
+                container.appendChild(qtyHint);
+
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = 0;
+                input.value = 0;
+                input.name = `${sub.name}_${option.name}`;
+                input.dataset.price = option.price;
+                input.classList.add('order-quantity');
+                container.appendChild(input);
+
+              } 
+              // Team/Individual select
+              else if (option.select_team_individual) {
+                const label = document.createElement('span');
+                label.innerText = option.name;
+                label.style.width = '150px';
+                container.appendChild(label);
+
+                const select = document.createElement('select');
+                select.name = `${sub.name}_${option.name}`;
+
+                const noneOption = document.createElement('option');
+                noneOption.value = "";
+                noneOption.innerText = "Select One";
+                select.appendChild(noneOption);
+
+                ['Team','Individual'].forEach(opt => {
+                  const optionEl = document.createElement('option');
+                  optionEl.value = opt.toLowerCase();
+                  optionEl.innerText = opt;
+                  select.appendChild(optionEl);
+                });
+
+                if(option.default) select.value = option.default.toLowerCase();
+
+                container.appendChild(select);
+              } 
+              // Name-only
+              else {
+                const label = document.createElement('span');
+                label.innerText = option.name;
+                container.appendChild(label);
               }
 
-              sub.options.forEach(option => {
-                const container = document.createElement('div');
-                container.classList.add('order-option');
-
-                if (option.quantity_inline) {
-                  const nameLabel = document.createElement('span');
-                  nameLabel.classList.add('option-name');
-                  nameLabel.innerText = option.name;
-                  container.appendChild(nameLabel);
-
-                  const priceLabel = document.createElement('span');
-                  priceLabel.classList.add('option-price');
-                  priceLabel.innerText = `$${option.price}`;
-                  priceLabel.style.fontWeight = 'bold';
-                  container.appendChild(priceLabel);
-
-                  const qtyHint = document.createElement('span');
-                  qtyHint.classList.add('option-quantity');
-                  qtyHint.innerText = 'Qty:';
-                  container.appendChild(qtyHint);
-
-                  const input = document.createElement('input');
-                  input.type = 'number';
-                  input.min = 0;
-                  input.value = 0;
-                  input.name = `${sub.name}_${option.name}`;
-                  input.dataset.price = option.price;
-                  input.classList.add('order-quantity');
-                  container.appendChild(input);
-
-                } else if (option.select_team_individual) {
-                  const label = document.createElement('span');
-                  label.innerText = option.name;
-                  label.style.width = '150px';
-                  container.appendChild(label);
-
-                  const select = document.createElement('select');
-                  select.name = `${sub.name}_${option.name}`;
-
-                  const noneOption = document.createElement('option');
-                  noneOption.value = "";
-                  noneOption.innerText = "Select One";
-                  select.appendChild(noneOption);
-
-                  ['Team','Individual'].forEach(opt => {
-                    const optionEl = document.createElement('option');
-                    optionEl.value = opt.toLowerCase();
-                    optionEl.innerText = opt;
-                    select.appendChild(optionEl);
-                  });
-
-                  if(option.default) {
-                    select.value = option.default.toLowerCase();
-                  }
-
-                  container.appendChild(select);
-                } else {
-                  const label = document.createElement('span');
-                  label.innerText = option.name;
-                  container.appendChild(label);
-                }
-
-                orderFormContainer.appendChild(container);
-              });
+              orderFormContainer.appendChild(container);
             });
-          }
+          });
         });
       }
     });
 
-    // --- PHONE NUMBER LIVE FORMAT ---
+    // --- PHONE NUMBER FORMAT ---
     const phoneInput = playerInfoContainer.querySelector('input[type="tel"]');
     if (phoneInput) {
-      phoneInput.addEventListener('input', e => {
+      phoneInput.addEventListener('input', () => {
         let cleaned = phoneInput.value.replace(/\D/g, '');
         if (cleaned.length > 10) cleaned = cleaned.slice(0, 10);
 
@@ -129,7 +130,7 @@ fetch('config_order.json')
       });
     }
 
-    // --- TOTAL DISPLAY ---
+    // --- TOTAL CALCULATION ---
     const totalDisplay = document.getElementById('total');
     function updateTotal() {
       let total = 0;
@@ -140,12 +141,10 @@ fetch('config_order.json')
       });
       totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
     }
-    document.querySelectorAll('.order-quantity').forEach(input => {
-      input.addEventListener('input', updateTotal);
-    });
+    document.querySelectorAll('.order-quantity').forEach(input => input.addEventListener('input', updateTotal));
     updateTotal();
 
-    // --- GENERATE QR CODE ---
+    // --- GENERATE QR ---
     const qrContainer = document.getElementById('qr');
     document.getElementById('qrForm').addEventListener('submit', e => {
       e.preventDefault();
@@ -157,13 +156,14 @@ fetch('config_order.json')
         if(f.type === 'order') {
           f.groups.forEach(group => {
             group.subSections.forEach(sub => {
+              const hasQtyItem = sub.options.some(option => option.quantity_inline && (parseInt(formData.get(`${sub.name}_${option.name}`)) || 0) > 0);
+
               sub.options.forEach(option => {
                 if(option.quantity_inline) {
-                  const inputName = `${sub.name}_${option.name}`;
-                  const qty = parseInt(formData.get(inputName)) || 0;
+                  const qty = parseInt(formData.get(`${sub.name}_${option.name}`)) || 0;
                   values.push(qty);
                   total += qty * parseFloat(option.price);
-                } else if(option.select_team_individual) {
+                } else if(option.select_team_individual && hasQtyItem) {
                   values.push(formData.get(`${sub.name}_${option.name}`));
                 }
               });
@@ -181,107 +181,72 @@ fetch('config_order.json')
       new QRCode(qrContainer, qrText);
     });
 
-    // ...[previous setup code unchanged]...
+    // --- DOWNLOAD RECEIPT ---
+    document.getElementById('downloadReceipt').addEventListener('click', () => {
+      const formData = new FormData(document.getElementById('qrForm'));
+      let total = 0;
 
-// --- DOWNLOAD RECEIPT WITH QR IMAGE ---
-document.getElementById('downloadReceipt').addEventListener('click', () => {
-  const formData = new FormData(document.getElementById('qrForm'));
+      let receiptHTML = `<html><head><title>Order Receipt</title></head><body>`;
+      receiptHTML += `<h2>Melich Photography Order Receipt</h2><ul>`;
 
-  let receiptHTML = `
-    <html>
-    <head><title>Melich Photography Order Receipt</title></head>
-    <body>
-      <h2>Melich Photography Order Receipt</h2>
-      <ul>
-  `;
+      config.fields.forEach(f => {
+        if(f.type === 'order') {
+          f.groups.forEach(group => {
+            let groupHTML = `<li><strong>${group.name}</strong><ul>`;
+            group.subSections.forEach(sub => {
+              const hasQtyItem = sub.options.some(option => option.quantity_inline && (parseInt(formData.get(`${sub.name}_${option.name}`)) || 0) > 0);
+              if(!hasQtyItem) return;
 
-  let total = 0;
-
-  config.fields.forEach(f => {
-    if (f.type === 'order') {
-      f.groups.forEach(group => {
-        let groupHTML = `<li><strong>${group.name}</strong><ul>`;
-        group.subSections.forEach(sub => {
-
-          // Check if any option in this subsection has quantity > 0
-          const hasQtyItem = sub.options.some(option => {
-            if (option.quantity_inline) {
-              const qty = parseInt(formData.get(`${sub.name}_${option.name}`)) || 0;
-              return qty > 0;
-            } else if (option.price && !option.quantity_inline) {
-              return true; // include priced items with no quantity input
-            }
-            return false;
+              let subHTML = `<li>${sub.name}<ul>`;
+              sub.options.forEach(option => {
+                if(option.quantity_inline) {
+                  const qty = parseInt(formData.get(`${sub.name}_${option.name}`)) || 0;
+                  if(qty > 0) {
+                    const lineTotal = (qty * parseFloat(option.price)).toFixed(2);
+                    total += parseFloat(lineTotal);
+                    subHTML += `<li>${option.name} x${qty} - $${lineTotal}</li>`;
+                  }
+                } else if(option.select_team_individual && hasQtyItem) {
+                  const selection = formData.get(`${sub.name}_${option.name}`);
+                  if(selection) subHTML += `<li>${option.name}: ${selection}</li>`;
+                }
+              });
+              subHTML += `</ul></li>`;
+              groupHTML += subHTML;
+            });
+            groupHTML += `</ul></li>`;
+            receiptHTML += groupHTML;
           });
-
-          if (!hasQtyItem) return; // skip subsection entirely if no quantity
-
-          let subHTML = `<li>${sub.name}<ul>`;
-
-          sub.options.forEach(option => {
-            if (option.quantity_inline) {
-              const inputName = `${sub.name}_${option.name}`;
-              const qty = parseInt(formData.get(inputName)) || 0;
-              if (qty > 0) {
-                const lineTotal = (qty * parseFloat(option.price)).toFixed(2);
-                total += parseFloat(lineTotal);
-                subHTML += `<li>${option.name} x${qty} - $${lineTotal}</li>`;
-              }
-            } else if (option.select_team_individual) {
-              // only include select if there is any quantity in this subsection
-              const selection = formData.get(`${sub.name}_${option.name}`);
-              if (selection) {
-                subHTML += `<li>${option.name}: ${selection}</li>`;
-              }
-            } else if (option.price) {
-              subHTML += `<li>${option.name} - $${option.price}</li>`;
-            }
-          });
-
-          subHTML += `</ul></li>`;
-          groupHTML += subHTML;
-        });
-        groupHTML += `</ul></li>`;
-        receiptHTML += groupHTML;
+        } else {
+          const value = formData.get(f.code);
+          if(value) receiptHTML += `<li>${f.label}: ${value}</li>`;
+        }
       });
-    } else {
-      const value = formData.get(f.code);
-      if (value) {
-        receiptHTML += `<li>${f.label}: ${value}</li>`;
+
+      receiptHTML += `</ul><p><strong>Total: $${total.toFixed(2)}</strong></p><div id="qrReceipt"></div></body></html>`;
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = receiptHTML;
+      const qrReceiptDiv = tempDiv.querySelector('#qrReceipt');
+
+      const qrText = Array.from(formData.entries()).map(([k,v]) => `${k}: ${v}`).join('\n');
+      const qrCode = new QRCode(qrReceiptDiv, { text: qrText, width:128, height:128 });
+
+      const canvas = qrReceiptDiv.querySelector('canvas');
+      if(canvas) {
+        const imgData = canvas.toDataURL('image/png');
+        qrReceiptDiv.innerHTML = `<img src="${imgData}" alt="QR Code">`;
       }
-    }
+
+      const blob = new Blob([tempDiv.innerHTML], { type: 'text/html' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'order_receipt.html';
+      link.click();
+    });
+
+  })
+  .catch(err => {
+    console.error('Error loading config:', err);
+    document.getElementById('title').innerText = 'Error loading form';
   });
-
-  receiptHTML += `
-      </ul>
-      <p><strong>Total: $${total.toFixed(2)}</strong></p>
-      <div id="qrReceipt"></div>
-    </body>
-    </html>
-  `;
-
-  // Generate QR code as before
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = receiptHTML;
-  const qrReceiptDiv = tempDiv.querySelector('#qrReceipt');
-
-  const qrText = Array.from(formData.entries())
-    .map(([key, value]) => `${key}: ${value}`).join('\n');
-  const qrCode = new QRCode(qrReceiptDiv, {
-    text: qrText,
-    width: 128,
-    height: 128
-  });
-
-  const canvas = qrReceiptDiv.querySelector('canvas');
-  if (canvas) {
-    const imgData = canvas.toDataURL('image/png');
-    qrReceiptDiv.innerHTML = `<img src="${imgData}" alt="QR Code">`;
-  }
-
-  const blob = new Blob([tempDiv.innerHTML], { type: 'text/html' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'order_receipt.html';
-  link.click();
-});
