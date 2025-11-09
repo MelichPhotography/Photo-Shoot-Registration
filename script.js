@@ -51,10 +51,21 @@ fetch('config_order.json')
                 container.style.marginBottom = '8px';
 
                 if (option.quantity_inline) {
+                  // Name
                   const nameLabel = document.createElement('span');
-                  nameLabel.innerHTML = `<b>${option.name} ($${option.price})</b>`;
-                  nameLabel.style.width = '300px';
+                  nameLabel.classList.add('option-name');
+                  nameLabel.innerText = option.name;
+                  nameLabel.style.flex = '1'; // Take remaining space
                   container.appendChild(nameLabel);
+
+                  // Price
+                  const priceLabel = document.createElement('span');
+                  priceLabel.classList.add('option-price');
+                  priceLabel.innerText = `$${option.price}`;
+                  priceLabel.style.width = '60px';
+                  priceLabel.style.textAlign = 'right';
+                  priceLabel.style.marginRight = '10px';
+                  container.appendChild(priceLabel);
 
                   const input = document.createElement('input');
                   input.type = 'number';
