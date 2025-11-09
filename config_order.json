@@ -73,7 +73,6 @@
             },
             {
               "name": "Digital/Print Package 2",
-              "note": "(1) Low res digital image\n(1) 4x5 print\n(1) 5x7 print",
               "options": [
                 { "name": "(1) Low Res Digital"},
                 { "name": "(1) 4x5 Print", "select_team_individual": true, "default": "individual" },
