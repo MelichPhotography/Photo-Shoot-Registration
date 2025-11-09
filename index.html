@@ -4,49 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Melich Photography - Photo Shoot Order Form</title>
-  <script src="qrcode.min.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 500px; margin: auto; background: #fdfdfd; color: #333; }
-    .logo-container { text-align: center; margin-bottom: 15px; }
-    .logo-container img { max-width: 200px; height: auto; }
-    h1 { text-align: center; margin-bottom: 20px; }
-    .player-info, #orderForm { padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: #fff; margin-bottom: 20px; }
-    form label { display: block; margin-bottom: 12px; }
-    input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
-      padding: 6px 8px; margin-top: 4px; width: 100%; box-sizing: border-box; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .group-header { font-weight: bold; font-size: 1.4em; margin-top: 16px; margin-bottom: 8px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
-    .sub-section-header { font-weight: 700; font-size: 1em; text-decoration: underline; margin-top: 20px; margin-bottom: 6px; }
-    .sub-section-note { font-size: 0.9em; color: #555; margin-left: 10px; margin-bottom: 12px; font-style: italic; }
-    .order-option { display: flex; align-items: center; margin-left: 20px; margin-bottom: 8px; }
-    .order-option span.option-name { flex: 1; }
-    .order-option span.option-price { margin-left: 10px; font-weight: bold; }
-    .order-option span.option-quantity { width: 24px; flex: 0 0 auto; font-size: 0.9em; color: #555; margin-left: 5px; }
-    input.order-quantity { width: 60px; padding: 4px; font-size: 16px; margin-right: 10px; }
-    #total { font-weight: bold; font-size: 1.2em; margin-top: 15px; color: #0077cc; }
-    #qr { margin-top: 20px; text-align: center; }
-    button { margin-top: 15px; padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #0077cc; color: #fff; border: none; border-radius: 6px; transition: background 0.2s; }
-    button:hover { background-color: #005fa3; }
-    @media (max-width:500px) { .order-option span{ width: 140px; } input.order-quantity{ width: 50px; } }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="logo-container">
     <img src="melich_logo.png" alt="Melich Photography Logo">
   </div>
-
   <h1 id="title">Loading Form...</h1>
 
   <form id="qrForm">
     <div class="player-info" id="playerInfo"></div>
     <div id="orderForm"></div>
     <div id="total"></div>
+
     <button type="submit">Generate QR Code</button>
+    <button type="button" id="downloadReceipt">Download Receipt</button>
   </form>
 
   <div id="qr"></div>
-  <button id="downloadReceipt" type="button">Download Receipt</button>
 
+  <!-- Local QR code library -->
+  <script src="qrcode.min.js"></script>
+  <!-- Main form script -->
   <script src="script.js"></script>
 </body>
 </html>
