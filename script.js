@@ -236,12 +236,26 @@ document.getElementById('downloadReceipt').addEventListener('click', async () =>
     <div id="qrForDownload"></div>
   `;
 
-  // Clone the QR code
-  const originalQR = document.getElementById('qr').querySelector('img');
-  if (originalQR) {
-    const qrClone = originalQR.cloneNode();
+  // Safely clone QR code for receipt
+const qrContainer = document.getElementById('qr');
+if (qrContainer) {
+  const qrCanvas = qrContainer.querySelector('canvas');
+  const qrImg = qrContainer.querySelector('img');
+  let qrClone;
+
+  if (qrCanvas) {
+    // If it's a canvas, convert to image
+    qrClone = document.createElement('img');
+    qrClone.src = qrCanvas.toDataURL();
+  } else if (qrImg) {
+    qrClone = qrImg.cloneNode();
+  }
+
+  if (qrClone) {
     receiptEl.querySelector('#qrForDownload').appendChild(qrClone);
   }
+}
+
 
   // Convert to canvas and PDF
   const canvas = await html2canvas(receiptEl);
