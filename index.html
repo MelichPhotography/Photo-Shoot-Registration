@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Melich Photography - Photo Shoot Order Form</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     body { font-family: Arial,sans-serif; padding:20px; max-width:500px; margin:auto; background:#fdfdfd; color:#333;}
     .logo-container { text-align:center; margin-bottom:15px;}
@@ -16,9 +16,9 @@
     .group-header { font-weight:bold; font-size:1.4em; margin-top:16px; margin-bottom:8px; border-bottom:1px solid #ccc; padding-bottom:2px;}
     .sub-section-header { font-weight:700; font-size:1.0em; text-decoration:underline; margin-top:20px; margin-bottom:6px;}
     .sub-section-note { font-size:0.9em; color:#555; margin-left:10px; margin-bottom:12px; font-style:italic;}
-    .order-option { display: flex; margin-left:20px; margin-bottom:8px; align-items:center;}
+    .order-option { display: flex; margin-left:20px; margin-bottom:8px;}
     .order-option span.option-name { flex: 1;}
-    .order-option span.option-price { margin-left: 10px; font-weight:bold; }
+    .order-option span.option-price { margin-left: 10px; font-weight bold; }
     .order-option span.option-quantity { width: 24px; flex: 0 0 auto;}
     input.order-quantity { width:60px; padding:4px; font-size:16px; margin-right:20px;}
     #total { font-weight:bold; font-size:1.2em; margin-top:15px; color:#0077cc;}
@@ -38,12 +38,8 @@
     <div id="orderForm"></div>
     <div id="total"></div>
     <button type="submit">Generate QR Code</button>
-    <button type="button" id="downloadReceipt">Download Receipt</button>
   </form>
   <div id="qr"></div>
-
-  <!-- Use local QR code library -->
-  <script src="qrcode.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
