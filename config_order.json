@@ -128,6 +128,8 @@
                 { "name": "5x7 Team Print", "price": 16, "quantity_inline": true },
                 { "name": "8x10 Team Print", "price": 25, "quantity_inline": true },
                 { "name": "11x14 Team Print", "price": 40, "quantity_inline": true }
+              ]
+            }
           ]
         }
       ]
