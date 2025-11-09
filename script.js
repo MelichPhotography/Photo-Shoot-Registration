@@ -46,36 +46,24 @@ fetch('config_order.json')
               sub.options.forEach(option => {
                 const container = document.createElement('div');
                 container.classList.add('order-option');
-                container.style.display = 'flex';
-                container.style.alignItems = 'center';
-                container.style.marginBottom = '8px';
 
                 if (option.quantity_inline) {
-                  // Name
                   const nameLabel = document.createElement('span');
                   nameLabel.classList.add('option-name');
                   nameLabel.innerText = option.name;
-                  nameLabel.style.flex = '1'; // Take remaining space
                   container.appendChild(nameLabel);
 
-                  // Price
                   const priceLabel = document.createElement('span');
                   priceLabel.classList.add('option-price');
                   priceLabel.innerText = `$${option.price}`;
                   priceLabel.style.fontWeight = 'bold';
-                  priceLabel.style.width = '60px';
-                  priceLabel.style.textAlign = 'right';
-                  priceLabel.style.marginRight = '10px';
                   container.appendChild(priceLabel);
 
                   const qtyHint = document.createElement('span');
                   qtyHint.classList.add('option-quantity');
                   qtyHint.innerText = 'Qty:';
-                  qtyHint.style.fontSize = '0.8em';
-                  qtyHint.style.color = '#555';
-                  qtyHint.style.marginLeft = '5px';
                   container.appendChild(qtyHint);
-                  
+
                   const input = document.createElement('input');
                   input.type = 'number';
                   input.min = 0;
@@ -83,52 +71,39 @@ fetch('config_order.json')
                   input.name = `${sub.name}_${option.name}`;
                   input.dataset.price = option.price;
                   input.classList.add('order-quantity');
-                  input.style.width = '60px';
-                  input.style.marginRight = '10px';
                   container.appendChild(input);
 
-
                 } else if (option.select_team_individual) {
-  const label = document.createElement('span');
-  label.innerText = option.name;
-  label.style.width = '150px';
-  container.appendChild(label);
+                  const label = document.createElement('span');
+                  label.innerText = option.name;
+                  label.style.width = '150px';
+                  container.appendChild(label);
 
-  const select = document.createElement('select');
-  select.name = `${sub.name}_${option.name}`;
+                  const select = document.createElement('select');
+                  select.name = `${sub.name}_${option.name}`;
 
-  // Add options including a placeholder
-  const noneOption = document.createElement('option');
-  noneOption.value = "";
-  noneOption.innerText = "Select One";
-  select.appendChild(noneOption);
+                  const noneOption = document.createElement('option');
+                  noneOption.value = "";
+                  noneOption.innerText = "Select One";
+                  select.appendChild(noneOption);
 
-  ['Team', 'Individual'].forEach(opt => {
-    const optionEl = document.createElement('option');
-    optionEl.value = opt.toLowerCase();
-    optionEl.innerText = opt;
-    select.appendChild(optionEl);
-  });
+                  ['Team','Individual'].forEach(opt => {
+                    const optionEl = document.createElement('option');
+                    optionEl.value = opt.toLowerCase();
+                    optionEl.innerText = opt;
+                    select.appendChild(optionEl);
+                  });
 
-  // Apply default if provided in config
-  if (option.default === "team") {
-    select.value = "team";
-  } else if (option.default === "individual") {
-    select.value = "individual";
-  } else {
-    select.value = ""; // Default to placeholder
-  }
+                  if(option.default) {
+                    select.value = option.default.toLowerCase();
+                  }
 
-  container.appendChild(select);
-}// Handle name-only rows (no price, no selector, no qty)
-else {
-  const label = document.createElement('span');
-  label.innerText = option.name;
-  //label.style.fontStyle = 'italic';
-  //label.style.paddingLeft = '20px';
-  container.appendChild(label);
-}
-
+                  container.appendChild(select);
+                } else {
+                  const label = document.createElement('span');
+                  label.innerText = option.name;
+                  container.appendChild(label);
+                }
 
                 orderFormContainer.appendChild(container);
               });
@@ -146,17 +121,16 @@ else {
         if (cleaned.length > 10) cleaned = cleaned.slice(0, 10);
 
         let formatted = '';
-        if (cleaned.length > 0) formatted += '(' + cleaned.slice(0, 3);
-        if (cleaned.length >= 4) formatted += ') ' + cleaned.slice(3, 6);
-        if (cleaned.length >= 7) formatted += '-' + cleaned.slice(6, 10);
+        if (cleaned.length > 0) formatted += '(' + cleaned.slice(0,3);
+        if (cleaned.length >= 4) formatted += ') ' + cleaned.slice(3,6);
+        if (cleaned.length >= 7) formatted += '-' + cleaned.slice(6,10);
 
         phoneInput.value = formatted;
       });
     }
-    
+
     // --- TOTAL DISPLAY ---
     const totalDisplay = document.getElementById('total');
-
     function updateTotal() {
       let total = 0;
       document.querySelectorAll('.order-quantity').forEach(input => {
@@ -166,13 +140,13 @@ else {
       });
       totalDisplay.innerText = `Total: $${total.toFixed(2)}`;
     }
-
     document.querySelectorAll('.order-quantity').forEach(input => {
       input.addEventListener('input', updateTotal);
     });
     updateTotal();
 
     // --- GENERATE QR CODE ---
+    const qrContainer = document.getElementById('qr');
     document.getElementById('qrForm').addEventListener('submit', e => {
       e.preventDefault();
       const formData = new FormData(document.getElementById('qrForm'));
@@ -180,16 +154,16 @@ else {
       let total = 0;
 
       config.fields.forEach(f => {
-        if (f.type === 'order') {
+        if(f.type === 'order') {
           f.groups.forEach(group => {
             group.subSections.forEach(sub => {
               sub.options.forEach(option => {
-                if (option.quantity_inline) {
+                if(option.quantity_inline) {
                   const inputName = `${sub.name}_${option.name}`;
                   const qty = parseInt(formData.get(inputName)) || 0;
                   values.push(qty);
                   total += qty * parseFloat(option.price);
-                } else if (option.select_team_individual) {
+                } else if(option.select_team_individual) {
                   values.push(formData.get(`${sub.name}_${option.name}`));
                 }
               });
@@ -202,8 +176,48 @@ else {
 
       values.push(total.toFixed(2));
       const qrText = values.join('\t') + '\n';
-      document.getElementById('qr').innerHTML = '';
-      new QRCode(document.getElementById('qr'), qrText);
+
+      qrContainer.innerHTML = '';
+      new QRCode(qrContainer, qrText);
+    });
+
+    // --- DOWNLOAD RECEIPT ---
+    document.getElementById('downloadReceipt').addEventListener('click', () => {
+      const formData = new FormData(document.getElementById('qrForm'));
+      let receipt = 'Melich Photography Order Receipt\n\n';
+      config.fields.forEach(f => {
+        if(f.type === 'order') {
+          f.groups.forEach(group => {
+            receipt += `${group.name}:\n`;
+            group.subSections.forEach(sub => {
+              receipt += `  ${sub.name}:\n`;
+              sub.options.forEach(option => {
+                if(option.quantity_inline) {
+                  const inputName = `${sub.name}_${option.name}`;
+                  const qty = parseInt(formData.get(inputName)) || 0;
+                  receipt += `    ${option.name} x${qty} - $${(qty*option.price).toFixed(2)}\n`;
+                } else if(option.select_team_individual) {
+                  const selection = formData.get(`${sub.name}_${option.name}`) || 'N/A';
+                  receipt += `    ${option.name}: ${selection}\n`;
+                } else if(option.price) {
+                  receipt += `    ${option.name} - $${option.price}\n`;
+                } else {
+                  receipt += `    ${option.name}\n`;
+                }
+              });
+            });
+          });
+        } else {
+          receipt += `${f.label}: ${formData.get(f.code)}\n`;
+        }
+      });
+      receipt += `\nTotal: ${totalDisplay.innerText}\n`;
+
+      const blob = new Blob([receipt], {type:'text/plain'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'order_receipt.txt';
+      link.click();
     });
   })
   .catch(err => {
