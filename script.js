@@ -210,38 +210,76 @@ else {
 
     // --- DOWNLOAD RECEIPT ---
 document.getElementById('downloadReceipt').addEventListener('click', async () => {
-  const receiptEl = document.createElement('div');
-  receiptEl.style.padding = '20px';
-  receiptEl.style.background = '#fff';
-  receiptEl.style.width = '400px';
-  receiptEl.style.fontFamily = 'Arial, sans-serif';
-  receiptEl.innerHTML = `
-    <h2>${config.title}</h2>
-    <h3>Player Info</h3>
-    <p>Name: ${document.querySelector('input[name="player_name"]').value}</p>
-    <p>Parent: ${document.querySelector('input[name="parent_name"]').value}</p>
-    <p>Phone: ${document.querySelector('input[name="phone"]').value}</p>
-    <p>Email: ${document.querySelector('input[name="email"]').value}</p>
-    <h3>Order Summary</h3>
-    <ul>
-      ${Array.from(document.querySelectorAll('.order-quantity')).map(input => {
-        const qty = parseInt(input.value);
-        if (qty > 0) {
-          const price = parseFloat(input.dataset.price);
-          return `<li>${input.name}: ${qty} × $${price} = $${(qty*price).toFixed(2)}</li>`;
-        }
-        return '';
-      }).join('')}
-    </ul>
-    <h3>${totalDisplay.innerText}</h3>
-    <h3>QR Code</h3>
-    <div id="qrForDownload"></div>
-  `;
+  const receiptEl = document.getElementById('receipt');
 
-  // Safely clone QR code for receipt
-const qrContainer = document.getElementById('qr');
-if (qrContainer) {
-  // Look for canvas or img
+  // Clear previous receipt content
+  const playerReceipt = document.getElementById('playerInfoReceipt');
+  const orderReceipt = document.getElementById('orderReceipt');
+  const totalReceipt = document.getElementById('totalReceipt');
+  const qrForDownload = document.getElementById('qrForDownload');
+  playerReceipt.innerHTML = '';
+  orderReceipt.innerHTML = '';
+  totalReceipt.innerHTML = '';
+  qrForDownload.innerHTML = '';
+
+  // --- Copy form values ---
+  const formData = new FormData(document.getElementById('qrForm'));
+  const configFields = config.fields; // make sure `config` is global or accessible here
+
+  configFields.forEach(f => {
+    if (f.type !== 'order') {
+      const val = formData.get(f.code) || '';
+      const p = document.createElement('p');
+      p.innerText = `${f.label}: ${val}`;
+      playerReceipt.appendChild(p);
+    } else {
+      f.groups.forEach(group => {
+        const groupDiv = document.createElement('div');
+        const groupHeader = document.createElement('h3');
+        groupHeader.innerText = group.name;
+        groupDiv.appendChild(groupHeader);
+
+        group.subSections.forEach(sub => {
+          const subHeader = document.createElement('strong');
+          subHeader.innerText = sub.name;
+          groupDiv.appendChild(subHeader);
+          groupDiv.appendChild(document.createElement('br'));
+
+          sub.options.forEach(option => {
+            let value = '';
+            if (option.quantity_inline) {
+              const qty = formData.get(`${sub.name}_${option.name}`) || 0;
+              if (parseInt(qty) > 0) value = `${option.name} x ${qty}`;
+            } else if (option.select_team_individual) {
+              value = `${option.name}: ${formData.get(`${sub.name}_${option.name}`) || ''}`;
+            } else {
+              value = option.name;
+            }
+            if (value) {
+              const p = document.createElement('p');
+              p.style.marginLeft = '10px';
+              p.innerText = value;
+              groupDiv.appendChild(p);
+            }
+          });
+        });
+
+        orderReceipt.appendChild(groupDiv);
+      });
+    }
+  });
+
+  // --- Total ---
+  let total = 0;
+  document.querySelectorAll('.order-quantity').forEach(input => {
+    const qty = parseInt(input.value) || 0;
+    const price = parseFloat(input.dataset.price) || 0;
+    total += qty * price;
+  });
+  totalReceipt.innerText = `Total: $${total.toFixed(2)}`;
+
+  // --- Copy QR code ---
+  const qrContainer = document.getElementById('qr');
   const qrCanvas = qrContainer.querySelector('canvas');
   const qrImg = qrContainer.querySelector('img');
   let qrClone;
@@ -254,29 +292,25 @@ if (qrContainer) {
   }
 
   if (qrClone) {
-    receiptEl.querySelector('#qrForDownload').appendChild(qrClone);
+    qrForDownload.appendChild(qrClone);
   } else {
-    // Optional: add placeholder text if QR not generated yet
-    receiptEl.querySelector('#qrForDownload').innerText = 'QR code not generated.';
+    qrForDownload.innerText = 'QR code not generated.';
   }
-}
 
+  // --- Show receipt temporarily to render ---
+  receiptEl.style.display = 'block';
 
+  // --- Generate PDF ---
+  html2canvas(receiptEl, { useCORS: true, logging: true, scale: 2 }).then(canvas => {
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF();
+    pdf.addImage(imgData, 'PNG', 10, 10, 190, 0);
+    pdf.save('receipt.pdf');
 
-  // Convert to canvas and PDF
-  const canvas = await html2canvas(receiptEl);
-  const imgData = canvas.toDataURL('image/png');
-
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF({
-    orientation: 'portrait',
-    unit: 'px',
-    format: [canvas.width, canvas.height]
+    // Hide receipt again
+    receiptEl.style.display = 'none';
   });
-  pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-  pdf.save('receipt.pdf');
-});
-    
+}); 
   })
   .catch(err => {
     console.error('Error loading config:', err);
