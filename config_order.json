@@ -45,18 +45,18 @@
               "name": "High Resolution Digital Images",
               "note": "Printable up to 20x24 inches, great for social media. Includes complementary matching high-resolution team image.",
               "options": [
-                { "name": "1 High Res Image", "price": 50, "quantity_inline": true },
-                { "name": "2 High Res Images ($100 Value)", "price": 90, "quantity_inline": true },
-                { "name": "3 High Res Images ($150 Value)", "price": 120, "quantity_inline": true }
+                { "name": "(1) High Res Image", "price": 50, "quantity_inline": true },
+                { "name": "(2) High Res Images ($100 Value)", "price": 90, "quantity_inline": true },
+                { "name": "(3) High Res Images ($150 Value)", "price": 120, "quantity_inline": true }
               ]
             },
             {
               "name": "Low Resolution Digital Images",
               "note": "Printable up to 8x12 inches, great for social media. Includes complementary matching low-resolution team image.",
               "options": [
-                { "name": "1 Low Res Image", "price": 35, "quantity_inline": true },
-                { "name": "2 Low Res Images ($70 Value)", "price": 60, "quantity_inline": true },
-                { "name": "3 Low Res Images ($105 Value)", "price": 75, "quantity_inline": true }
+                { "name": "(1) Low Res Image", "price": 35, "quantity_inline": true },
+                { "name": "(2) Low Res Images ($70 Value)", "price": 60, "quantity_inline": true },
+                { "name": "(3) Low Res Images ($105 Value)", "price": 75, "quantity_inline": true }
               ]
             }
           ]
@@ -112,15 +112,22 @@
             {
               "name": "Individual Prints",
               "options": [
-                { "name": "4x5 Print", "price": 12, "quantity_inline": true },
-                { "name": "5x7 Print", "price": 16, "quantity_inline": true },
-                { "name": "8x10 Print", "price": 25, "quantity_inline": true },
-                { "name": "11x14 Print", "price": 40, "quantity_inline": true },
-                { "name": "(8) Wallet Prints", "price": 14, "quantity_inline": true },
-                { "name": "Photo Magnet", "note": "3.25\" x 4.75\"", "price": 12, "quantity_inline": true },
-                { "name": "3\" Photo Button", "price": 10, "quantity_inline": true }
+                { "name": "4x5 Individual Print", "price": 12, "quantity_inline": true },
+                { "name": "5x7 Individual Print", "price": 16, "quantity_inline": true },
+                { "name": "8x10 Individual Print", "price": 25, "quantity_inline": true },
+                { "name": "11x14 Individual Print", "price": 40, "quantity_inline": true },
+                { "name": "(8) Individual Wallet Prints", "price": 14, "quantity_inline": true },
+                { "name": "3.25\" x 4.75\" Individual Photo Magnet", "price": 12, "quantity_inline": true },
+                { "name": "3\" Individual Photo Button", "price": 10, "quantity_inline": true }
               ]
-            }
+            },
+            {
+              "name": "Team Prints",
+              "options": [
+                { "name": "4x5 Team Print", "price": 12, "quantity_inline": true },
+                { "name": "5x7 Team Print", "price": 16, "quantity_inline": true },
+                { "name": "8x10 Team Print", "price": 25, "quantity_inline": true },
+                { "name": "11x14 Team Print", "price": 40, "quantity_inline": true }
           ]
         }
       ]
