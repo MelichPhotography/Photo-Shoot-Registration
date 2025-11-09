@@ -69,7 +69,7 @@ fetch('config_order.json')
                   container.appendChild(priceLabel);
 
                   const qtyHint = document.createElement('span');
-                  qtyLabel.classList.add('option-quantity');
+                  qtyHint.classList.add('option-quantity');
                   qtyHint.innerText = 'Qty:';
                   qtyHint.style.fontSize = '0.8em';
                   qtyHint.style.color = '#555';
