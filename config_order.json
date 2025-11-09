@@ -112,7 +112,13 @@
             {
               "name": "Individual Prints",
               "options": [
-                { "name": "4x5 Print", "price": 12, "quantity_inline": true }
+                { "name": "4x5 Print", "price": 12, "quantity_inline": true },
+                { "name": "5x7 Print", "price": 16, "quantity_inline": true },
+                { "name": "8x10 Print", "price": 25, "quantity_inline": true },
+                { "name": "11x14 Print", "price": 40, "quantity_inline": true },
+                { "name": "(8) Wallet Prints", "price": 14, "quantity_inline": true },
+                { "name": "Photo Magnet", "note": "3.25\" x 4.75\"", "price": 12, "quantity_inline": true },
+                { "name": "3\" Photo Button", "price": 10, "quantity_inline": true }
               ]
             }
           ]
