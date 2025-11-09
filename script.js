@@ -124,8 +124,8 @@ fetch('config_order.json')
 else {
   const label = document.createElement('span');
   label.innerText = option.name;
-  label.style.fontStyle = 'italic';
-  label.style.paddingLeft = '20px';
+  //label.style.fontStyle = 'italic';
+  //label.style.paddingLeft = '20px';
   container.appendChild(label);
 }
 
