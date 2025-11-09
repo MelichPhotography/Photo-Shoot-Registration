@@ -72,13 +72,19 @@ fetch('config_order.json')
                   input.type = 'number';
                   input.min = 0;
                   input.value = 0;
-                  input.placeholder = 'Quantity';
                   input.name = `${sub.name}_${option.name}`;
                   input.dataset.price = option.price;
                   input.classList.add('order-quantity');
                   input.style.width = '60px';
                   input.style.marginRight = '10px';
                   container.appendChild(input);
+
+                  const qtyHint = document.createElement('span');
+                  qtyHint.innerText = 'Qty';
+                  qtyHint.style.fontSize = '0.8em';
+                  qtyHint.style.color = '#555';
+                  qtyHint.style.marginLeft = '5px';
+                  container.appendChild(qtyHint);
 
                 } else if (option.select_team_individual) {
                   const label = document.createElement('span');
