@@ -204,6 +204,8 @@ else {
       const qrText = values.join('\t') + '\n';
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
+      document.getElementById('downloadReceipt').disabled = false;
+
     });
 
     // --- DOWNLOAD RECEIPT ---
