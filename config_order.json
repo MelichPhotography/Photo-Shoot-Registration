@@ -75,9 +75,9 @@
               "name": "Digital/Print Package 2",
               "note": "(1) Low res digital image\n(1) 4x5 print\n(1) 5x7 print",
               "options": [
-                { "name": "(1) Low Res Digital", "price": 0 },
-                { "name": "4x5 Print Selection", "select_team_individual": true, "default": "individual" },
-                { "name": "5x7 Print Selection", "select_team_individual": true, "default": "team" },
+                { "name": "(1) Low Res Digital"},
+                { "name": "(1) 4x5 Print", "select_team_individual": true, "default": "individual" },
+                { "name": "(1) 5x7 Print", "select_team_individual": true, "default": "team" },
                 { "name": "Package Price ($63 Value)", "price": 50, "quantity_inline": true }
               ]
             }
