@@ -120,7 +120,15 @@ fetch('config_order.json')
   }
 
   container.appendChild(select);
+}// Handle name-only rows (no price, no selector, no qty)
+else {
+  const label = document.createElement('span');
+  label.innerText = option.name;
+  label.style.fontStyle = 'italic';
+  label.style.paddingLeft = '20px';
+  container.appendChild(label);
 }
+
 
                 orderFormContainer.appendChild(container);
               });
