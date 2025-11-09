@@ -124,8 +124,8 @@ fetch('config_order.json')
 else {
   const label = document.createElement('span');
   label.innerText = option.name;
-  //label.style.fontStyle = 'italic';
-  //label.style.paddingLeft = '20px';
+  label.style.fontStyle = 'italic';
+  label.style.paddingLeft = '20px';
   container.appendChild(label);
 }
 
@@ -204,113 +204,7 @@ else {
       const qrText = values.join('\t') + '\n';
       document.getElementById('qr').innerHTML = '';
       new QRCode(document.getElementById('qr'), qrText);
-      document.getElementById('downloadReceipt').disabled = false;
-
     });
-
-    // --- DOWNLOAD RECEIPT ---
-document.getElementById('downloadReceipt').addEventListener('click', async () => {
-  const receiptEl = document.getElementById('receipt');
-
-  // Clear previous receipt content
-  const playerReceipt = document.getElementById('playerInfoReceipt');
-  const orderReceipt = document.getElementById('orderReceipt');
-  const totalReceipt = document.getElementById('totalReceipt');
-  const qrForDownload = document.getElementById('qrForDownload');
-  playerReceipt.innerHTML = '';
-  orderReceipt.innerHTML = '';
-  totalReceipt.innerHTML = '';
-  qrForDownload.innerHTML = '';
-
-  // --- Copy form values ---
-  const formData = new FormData(document.getElementById('qrForm'));
-  const configFields = config.fields; // make sure `config` is global or accessible here
-
-  configFields.forEach(f => {
-    if (f.type !== 'order') {
-      const val = formData.get(f.code) || '';
-      const p = document.createElement('p');
-      p.innerText = `${f.label}: ${val}`;
-      playerReceipt.appendChild(p);
-    } else {
-      f.groups.forEach(group => {
-        const groupDiv = document.createElement('div');
-        const groupHeader = document.createElement('h3');
-        groupHeader.innerText = group.name;
-        groupDiv.appendChild(groupHeader);
-
-        group.subSections.forEach(sub => {
-          const subHeader = document.createElement('strong');
-          subHeader.innerText = sub.name;
-          groupDiv.appendChild(subHeader);
-          groupDiv.appendChild(document.createElement('br'));
-
-          sub.options.forEach(option => {
-            let value = '';
-            if (option.quantity_inline) {
-              const qty = formData.get(`${sub.name}_${option.name}`) || 0;
-              if (parseInt(qty) > 0) value = `${option.name} x ${qty}`;
-            } else if (option.select_team_individual) {
-              value = `${option.name}: ${formData.get(`${sub.name}_${option.name}`) || ''}`;
-            } else {
-              value = option.name;
-            }
-            if (value) {
-              const p = document.createElement('p');
-              p.style.marginLeft = '10px';
-              p.innerText = value;
-              groupDiv.appendChild(p);
-            }
-          });
-        });
-
-        orderReceipt.appendChild(groupDiv);
-      });
-    }
-  });
-
-  // --- Total ---
-  let total = 0;
-  document.querySelectorAll('.order-quantity').forEach(input => {
-    const qty = parseInt(input.value) || 0;
-    const price = parseFloat(input.dataset.price) || 0;
-    total += qty * price;
-  });
-  totalReceipt.innerText = `Total: $${total.toFixed(2)}`;
-
-  // --- Copy QR code ---
-  const qrContainer = document.getElementById('qr');
-  const qrCanvas = qrContainer.querySelector('canvas');
-  const qrImg = qrContainer.querySelector('img');
-  let qrClone;
-
-  if (qrCanvas) {
-    qrClone = document.createElement('img');
-    qrClone.src = qrCanvas.toDataURL();
-  } else if (qrImg) {
-    qrClone = qrImg.cloneNode();
-  }
-
-  if (qrClone) {
-    qrForDownload.appendChild(qrClone);
-  } else {
-    qrForDownload.innerText = 'QR code not generated.';
-  }
-
-  // --- Show receipt temporarily to render ---
-  receiptEl.style.display = 'block';
-
-  // --- Generate PDF ---
-  html2canvas(receiptEl, { useCORS: true, logging: true, scale: 2 }).then(canvas => {
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF();
-    pdf.addImage(imgData, 'PNG', 10, 10, 190, 0);
-    pdf.save('receipt.pdf');
-
-    // Hide receipt again
-    receiptEl.style.display = 'none';
-  });
-}); 
   })
   .catch(err => {
     console.error('Error loading config:', err);
