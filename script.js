@@ -187,7 +187,6 @@ fetch('config_order.json')
 document.getElementById('downloadReceipt').addEventListener('click', () => {
   const formData = new FormData(document.getElementById('qrForm'));
 
-  // Prepare HTML receipt
   let receiptHTML = `
     <html>
     <head><title>Melich Photography Order Receipt</title></head>
@@ -203,17 +202,33 @@ document.getElementById('downloadReceipt').addEventListener('click', () => {
       f.groups.forEach(group => {
         let groupHTML = `<li><strong>${group.name}</strong><ul>`;
         group.subSections.forEach(sub => {
+
+          // Check if any option in this subsection has quantity > 0
+          const hasQtyItem = sub.options.some(option => {
+            if (option.quantity_inline) {
+              const qty = parseInt(formData.get(`${sub.name}_${option.name}`)) || 0;
+              return qty > 0;
+            } else if (option.price && !option.quantity_inline) {
+              return true; // include priced items with no quantity input
+            }
+            return false;
+          });
+
+          if (!hasQtyItem) return; // skip subsection entirely if no quantity
+
           let subHTML = `<li>${sub.name}<ul>`;
+
           sub.options.forEach(option => {
             if (option.quantity_inline) {
               const inputName = `${sub.name}_${option.name}`;
               const qty = parseInt(formData.get(inputName)) || 0;
-              if (qty > 0) { // only include items with quantity > 0
+              if (qty > 0) {
                 const lineTotal = (qty * parseFloat(option.price)).toFixed(2);
                 total += parseFloat(lineTotal);
                 subHTML += `<li>${option.name} x${qty} - $${lineTotal}</li>`;
               }
             } else if (option.select_team_individual) {
+              // only include select if there is any quantity in this subsection
               const selection = formData.get(`${sub.name}_${option.name}`);
               if (selection) {
                 subHTML += `<li>${option.name}: ${selection}</li>`;
@@ -222,6 +237,7 @@ document.getElementById('downloadReceipt').addEventListener('click', () => {
               subHTML += `<li>${option.name} - $${option.price}</li>`;
             }
           });
+
           subHTML += `</ul></li>`;
           groupHTML += subHTML;
         });
@@ -244,12 +260,11 @@ document.getElementById('downloadReceipt').addEventListener('click', () => {
     </html>
   `;
 
-  // Create a temporary document to generate QR in it
+  // Generate QR code as before
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = receiptHTML;
   const qrReceiptDiv = tempDiv.querySelector('#qrReceipt');
 
-  // Generate QR code
   const qrText = Array.from(formData.entries())
     .map(([key, value]) => `${key}: ${value}`).join('\n');
   const qrCode = new QRCode(qrReceiptDiv, {
@@ -258,14 +273,12 @@ document.getElementById('downloadReceipt').addEventListener('click', () => {
     height: 128
   });
 
-  // Convert the QR code canvas to data URL
   const canvas = qrReceiptDiv.querySelector('canvas');
   if (canvas) {
     const imgData = canvas.toDataURL('image/png');
     qrReceiptDiv.innerHTML = `<img src="${imgData}" alt="QR Code">`;
   }
 
-  // Save receipt as HTML file
   const blob = new Blob([tempDiv.innerHTML], { type: 'text/html' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
